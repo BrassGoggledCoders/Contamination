@@ -34,9 +34,14 @@ targetCompatibility = 1.8
 
 repositories {
     mavenCentral()
+    maven {
+        name "TAC maven"
+        url "http://maven.blamejared.com"
+    }
 }
 
 dependencies {
+    deobfCompile "com.teamacronymcoders.base:base:${base_version}-SNAPSHOT.+"
 }
 
 processResources {

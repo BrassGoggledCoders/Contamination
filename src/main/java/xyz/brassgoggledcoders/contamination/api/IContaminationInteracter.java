@@ -1,4 +1,4 @@
-package xyz.brassgoggledcoders.contaminationapi;
+package xyz.brassgoggledcoders.contamination.api;
 
 import java.util.concurrent.Callable;
 

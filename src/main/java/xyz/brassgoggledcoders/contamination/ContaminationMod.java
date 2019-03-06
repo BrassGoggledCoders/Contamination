@@ -1,7 +1,9 @@
-package xyz.brassgoggledcoders.contaminationapi;
+package xyz.brassgoggledcoders.contamination;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+
+import com.teamacronymcoders.base.BaseModFoundation;
 
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
@@ -15,18 +17,25 @@ import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.fml.common.FMLLog;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
-import net.minecraftforge.fml.common.Mod.EventHandler;
+import net.minecraftforge.fml.common.Mod.*;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import xyz.brassgoggledcoders.contamination.api.IContaminationHolder;
+import xyz.brassgoggledcoders.contamination.api.IContaminationInteracter;
 
-@Mod(modid = ContaminationAPIMod.MODID, name = ContaminationAPIMod.MODNAME, version = ContaminationAPIMod.MODVERSION)
+@Mod(modid = ContaminationMod.MODID, name = ContaminationMod.MODNAME, version = ContaminationMod.MODVERSION)
 @EventBusSubscriber
-public class ContaminationAPIMod {
+public class ContaminationMod extends BaseModFoundation<ContaminationMod> {
 
 	public static final String MODID = "contaminationapi";
-	public static final String MODNAME = "ContaminationAPI";
+	public static final String MODNAME = "Contamination";
 	public static final String MODVERSION = "@VERSION@";
+	@Instance(MODID)
+	public static ContaminationMod instance;
+	
+	public ContaminationMod() {
+		super(MODID, MODNAME, MODVERSION, null);
+	}
 	
 	@CapabilityInject(IContaminationHolder.class)
     public static Capability<IContaminationHolder> CONTAMINATION_HOLDER_CAPABILITY = null;
@@ -34,7 +43,9 @@ public class ContaminationAPIMod {
     public static Capability<IContaminationInteracter> CONTAMINATION_INTERACTER_CAPABILITY = null;
 	
 	@EventHandler
+	@Override
 	public void preInit(FMLPreInitializationEvent event) {
+		super.preInit(event);
 		CapabilityManager.INSTANCE.register(IContaminationHolder.class, new IContaminationHolder.Storage(), new IContaminationHolder.Factory());
 		CapabilityManager.INSTANCE.register(IContaminationInteracter.class, new IContaminationInteracter.Storage(), new IContaminationInteracter.Factory());
 	}
@@ -101,7 +112,7 @@ public class ContaminationAPIMod {
 		FMLLog.warning(event.getObject().getTranslationKey());
 		if(event.getObject().getItem() == Items.FLINT_AND_STEEL) {
 			FMLLog.bigWarning("Adding");
-			event.addCapability(new ResourceLocation(ContaminationAPIMod.MODID, "contamination_interacter"), new ContaminationInteracterProvider(1));
+			event.addCapability(new ResourceLocation(ContaminationMod.MODID, "contamination_interacter"), new ContaminationInteracterProvider(1));
 		}
 	}
 	
@@ -111,17 +122,22 @@ public class ContaminationAPIMod {
         if (!event.getWorld().isRemote) {
             ItemStack stack = event.getEntityPlayer().getHeldItem(event.getHand());
             int delta = 0;
-            if (stack.hasCapability(ContaminationAPIMod.CONTAMINATION_INTERACTER_CAPABILITY, null)) {
-            	delta = stack.getCapability(ContaminationAPIMod.CONTAMINATION_INTERACTER_CAPABILITY, null).getContaminationModifier();
+            if (stack.hasCapability(ContaminationMod.CONTAMINATION_INTERACTER_CAPABILITY, null)) {
+            	delta = stack.getCapability(ContaminationMod.CONTAMINATION_INTERACTER_CAPABILITY, null).getContaminationModifier();
             }
             FMLLog.warning("" + delta);
 
             if(delta != 0) {
                 Chunk chunk = event.getWorld().getChunk(event.getPos());
-            	IContaminationHolder pollution = chunk.getCapability(ContaminationAPIMod.CONTAMINATION_HOLDER_CAPABILITY, null);
+            	IContaminationHolder pollution = chunk.getCapability(ContaminationMod.CONTAMINATION_HOLDER_CAPABILITY, null);
             	pollution.set(pollution.get() + delta, true);
             	event.getEntityPlayer().sendStatusMessage(new TextComponentString("Chunk pollution: " + pollution.get()), true);
             }
         }
     }
+
+	@Override
+	public ContaminationMod getInstance() {
+		return instance;
+	}
 }
