@@ -5,17 +5,12 @@ import javax.annotation.Nullable;
 
 import com.teamacronymcoders.base.BaseModFoundation;
 
-import net.minecraft.init.Items;
-import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.common.capabilities.*;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
-import net.minecraftforge.event.entity.player.PlayerInteractEvent;
-import net.minecraftforge.fml.common.FMLLog;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.*;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
@@ -52,6 +47,7 @@ public class ContaminationMod extends BaseModFoundation<ContaminationMod> {
 	
 	@SubscribeEvent
 	public static void attachChunkCaps(AttachCapabilitiesEvent<Chunk> event) {
+		//TODO Only attach the capability when an interacter is placed in the chunk? 
 		event.addCapability(new ResourceLocation(MODID, "contamination_holder"), new ContaminationProvider(event.getObject()));
 	}
 	
@@ -104,35 +100,6 @@ public class ContaminationMod extends BaseModFoundation<ContaminationMod> {
         @Override
         public <T> T getCapability(@Nonnull Capability<T> capability, @Nullable EnumFacing facing) {
             return capability == CONTAMINATION_HOLDER_CAPABILITY ? CONTAMINATION_HOLDER_CAPABILITY.cast(contamination) : null;
-        }
-    }
-    
-    @SubscribeEvent
-	public static void attachItemCaps(AttachCapabilitiesEvent<ItemStack> event) {
-		FMLLog.warning(event.getObject().getTranslationKey());
-		if(event.getObject().getItem() == Items.FLINT_AND_STEEL) {
-			FMLLog.bigWarning("Adding");
-			event.addCapability(new ResourceLocation(ContaminationMod.MODID, "contamination_interacter"), new ContaminationInteracterProvider(1));
-		}
-	}
-	
-	@SubscribeEvent
-    public static void onUseItem(PlayerInteractEvent.RightClickBlock event)
-    {
-        if (!event.getWorld().isRemote) {
-            ItemStack stack = event.getEntityPlayer().getHeldItem(event.getHand());
-            int delta = 0;
-            if (stack.hasCapability(ContaminationMod.CONTAMINATION_INTERACTER_CAPABILITY, null)) {
-            	delta = stack.getCapability(ContaminationMod.CONTAMINATION_INTERACTER_CAPABILITY, null).getContaminationModifier();
-            }
-            FMLLog.warning("" + delta);
-
-            if(delta != 0) {
-                Chunk chunk = event.getWorld().getChunk(event.getPos());
-            	IContaminationHolder pollution = chunk.getCapability(ContaminationMod.CONTAMINATION_HOLDER_CAPABILITY, null);
-            	pollution.set(pollution.get() + delta, true);
-            	event.getEntityPlayer().sendStatusMessage(new TextComponentString("Chunk pollution: " + pollution.get()), true);
-            }
         }
     }
 
