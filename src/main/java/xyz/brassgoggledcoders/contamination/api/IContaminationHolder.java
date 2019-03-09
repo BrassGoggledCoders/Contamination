@@ -5,28 +5,43 @@ import java.util.concurrent.Callable;
 import javax.annotation.Nullable;
 
 import net.minecraft.nbt.NBTBase;
-import net.minecraft.nbt.NBTTagInt;
+import net.minecraft.nbt.NBTTagIntArray;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.common.capabilities.Capability;
 
 public interface IContaminationHolder {
 
-	int get();
+	int get(int loc);
 
-	void set(int value, boolean markDirty);
+	int[] getAll();
+	
+	void set(int pos, int value, boolean markDirty);
+	
+	void setAll(int[] values);
 
 	public static class Implementation implements IContaminationHolder {
-		private int value;
+		private int[] values = new int[ContaminationTypeRegistry.getNumberOfTypes()];
 
 		@Override
-		public int get() {
-			return value;
+		public int[] getAll() {
+			return values;
 		}
 
 		@Override
-		public void set(int value, boolean markDirty) {
-			this.value = value;
+		public void set(int pos, int value, boolean markDirty) {
+			this.values[pos] = value;
+		}
+
+		@Override
+		public int get(int pos) {
+			return values[pos];
+		}
+
+
+		@Override
+		public void setAll(int[] values) {
+			this.values = values;
 		}
 	}
 
@@ -38,8 +53,8 @@ public interface IContaminationHolder {
 		}
 
 		@Override
-		public void set(int value, boolean markDirty) {
-			super.set(value, markDirty);
+		public void set(int pos, int value, boolean markDirty) {
+			super.set(pos, value, markDirty);
 			if(markDirty) {
 				chunk.markDirty();
 			}
@@ -51,22 +66,19 @@ public interface IContaminationHolder {
 		@Override
 		public NBTBase writeNBT(Capability<IContaminationHolder> capability, IContaminationHolder instance,
 				EnumFacing side) {
-			return new NBTTagInt(instance.get());
+			return new NBTTagIntArray(instance.getAll());
 		}
 
 		@Override
 		public void readNBT(Capability<IContaminationHolder> capability, IContaminationHolder instance, EnumFacing side,
 				NBTBase nbt) {
-			if(nbt instanceof NBTTagInt) {
-				// The state is being loaded and not updated. We set the value silently to avoid
-				// unnecessary dirty chunks
-				instance.set(((NBTTagInt) nbt).getInt(), false);
+			if(nbt instanceof NBTTagIntArray) {
+				instance.setAll(((NBTTagIntArray) nbt).getIntArray());
 			}
 		}
 	}
 
 	public static class Factory implements Callable<IContaminationHolder> {
-
 		@Override
 		public IContaminationHolder call() throws Exception {
 			return new Implementation();

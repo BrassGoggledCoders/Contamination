@@ -15,8 +15,7 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.*;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import xyz.brassgoggledcoders.contamination.api.IContaminationHolder;
-import xyz.brassgoggledcoders.contamination.api.IContaminationInteracter;
+import xyz.brassgoggledcoders.contamination.api.*;
 
 @Mod(modid = ContaminationMod.MODID, name = ContaminationMod.MODNAME, version = ContaminationMod.MODVERSION)
 @EventBusSubscriber
@@ -55,9 +54,9 @@ public class ContaminationMod extends BaseModFoundation<ContaminationMod> {
     {
         private final IContaminationInteracter contamination;
 
-        public ContaminationInteracterProvider(int value)
+        public ContaminationInteracterProvider(IContaminationType type, int value)
         {
-            contamination = new IContaminationInteracter.Implementation(value);
+            contamination = new IContaminationInteracter.Implementation(type, value);
         }
 
         @Override
