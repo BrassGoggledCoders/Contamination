@@ -5,8 +5,8 @@ import xyz.brassgoggledcoders.contamination.api.IContaminationEffect;
 public class ContaminationEffectTest implements IContaminationEffect {
 
 	@Override
-	public int getWeight() {
-		return 0;
+	public int getThreshold() {
+		return 5;
 	}
 
 	@Override

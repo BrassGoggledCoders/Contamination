@@ -1,8 +1,18 @@
 package xyz.brassgoggledcoders.contamination.api;
 
+import javax.annotation.Nullable;
+
+import net.minecraft.entity.player.EntityPlayer;
+
 public interface IContaminationEffect {
 	//NYI
-	public int getWeight();
+	public int getThreshold();
 	
-	public void triggerEffect();
+	public default void triggerEffect() {
+		
+	}
+	
+	public default void triggerEffect(@Nullable EntityPlayer player) {
+		
+	}
 }
