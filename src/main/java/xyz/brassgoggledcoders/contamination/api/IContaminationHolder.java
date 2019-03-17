@@ -1,5 +1,6 @@
 package xyz.brassgoggledcoders.contamination.api;
 
+import java.util.Arrays;
 import java.util.concurrent.Callable;
 
 import javax.annotation.Nullable;
@@ -35,6 +36,9 @@ public interface IContaminationHolder {
 
 		@Override
 		public int get(int pos) {
+			if(pos >= values.length) {
+				values = Arrays.copyOf(values, ContaminationTypeRegistry.getNumberOfTypes());
+			}
 			return values[pos];
 		}
 
