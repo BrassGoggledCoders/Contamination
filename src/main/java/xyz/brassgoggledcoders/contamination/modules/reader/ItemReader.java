@@ -18,7 +18,7 @@ public class ItemReader extends ItemBase {
 	boolean isDebug;
 	
 	public ItemReader(int contaminationPos) {
-		super("contamination_reader");
+		super("contamination_reader" + contaminationPos);
 		this.setCreativeTab(CreativeTabs.MISC);
 		this.contaminationPos = contaminationPos;
 	}

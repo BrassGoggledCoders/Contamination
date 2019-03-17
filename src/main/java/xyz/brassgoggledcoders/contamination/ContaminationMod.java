@@ -33,7 +33,7 @@ public class ContaminationMod extends BaseModFoundation<ContaminationMod> {
 	static int currentTicks;
 	final static int maxTicks = 20;
 	
-	public static final String MODID = "contaminationapi";
+	public static final String MODID = "contamination";
 	public static final String MODNAME = "Contamination";
 	public static final String MODVERSION = "@VERSION@";
 	@Instance(MODID)
