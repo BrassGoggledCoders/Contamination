@@ -192,11 +192,12 @@ public class ContaminationMod extends BaseModFoundation<ContaminationMod> {
 	}
 
 	private static void trySpreadPollution(Chunk source, Chunk neighbour) {
+		//TODO: The higher the pollution in a chunk the greater the chance to spread
 		if(source.getWorld().rand.nextInt(200) == 0) {
 			IContaminationHolder sourceC = source.getCapability(ContaminationMod.CONTAMINATION_HOLDER_CAPABILITY, null);
 			IContaminationHolder neighbourC = neighbour.getCapability(ContaminationMod.CONTAMINATION_HOLDER_CAPABILITY, null);
 	        for(int pos = 0; pos < ContaminationTypeRegistry.getNumberOfTypes(); pos++) {
-	            if(sourceC.get(pos) > 0 && sourceC.get(pos) > neighbourC.get(pos)) {
+	            if(sourceC.get(pos) > 1 && sourceC.get(pos) > neighbourC.get(pos)) {
 	            	sourceC.set(pos, sourceC.get(pos) - 1, true);
 	            	neighbourC.set(pos, neighbourC.get(pos) + 1, true);
 	            }
