@@ -188,6 +188,10 @@ public class ContaminationMod extends BaseModFoundation<ContaminationMod> {
 						for(IContaminationEffect effect : type.getEffectSet()) {
 							if(effect instanceof IWorldTickEffect && current >= effect.getThreshold()) {
 								((IWorldTickEffect) effect).triggerEffect(chunk);
+								int red = effect.getReductionOnEffect(world.getDifficulty(), world.rand);
+								if(red > 0) {
+									pollution.set(pos, red, true);
+								}
 							}
 						}
 					}

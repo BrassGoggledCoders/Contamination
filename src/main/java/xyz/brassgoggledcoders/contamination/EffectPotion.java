@@ -1,8 +1,11 @@
 package xyz.brassgoggledcoders.contamination;
 
+import java.util.Random;
+
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
+import net.minecraft.world.EnumDifficulty;
 import xyz.brassgoggledcoders.contamination.api.effect.IEntityTickEffect;
 
 public class EffectPotion implements IEntityTickEffect {
@@ -32,5 +35,13 @@ public class EffectPotion implements IEntityTickEffect {
 		else {
 			entityLiving.addPotionEffect(new PotionEffect(Potion.getPotionFromResourceLocation(effectName),60, 0, true, false));
 		}
+	}
+
+	@Override
+	public int getReductionOnEffect(EnumDifficulty enumDifficulty, Random rand) {
+		if(EnumDifficulty.HARD.equals(enumDifficulty)) {
+			return 0;
+		}
+		return rand.nextInt(3);
 	}
 }
