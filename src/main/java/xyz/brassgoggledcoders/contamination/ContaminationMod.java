@@ -1,5 +1,7 @@
 package xyz.brassgoggledcoders.contamination;
 
+import java.util.Iterator;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -8,19 +10,27 @@ import com.teamacronymcoders.base.BaseModFoundation;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.WorldServer;
 import net.minecraft.world.chunk.Chunk;
+import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.capabilities.*;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.*;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent;
 import xyz.brassgoggledcoders.contamination.api.*;
+import xyz.brassgoggledcoders.contamination.api.effect.IContaminationEffect;
+import xyz.brassgoggledcoders.contamination.api.effect.IWorldTickEffect;
 
 @Mod(modid = ContaminationMod.MODID, name = ContaminationMod.MODNAME, version = ContaminationMod.MODVERSION)
 @EventBusSubscriber
 public class ContaminationMod extends BaseModFoundation<ContaminationMod> {
 
+	static int currentTicks;
+	final static int maxTicks = 20;
+	
 	public static final String MODID = "contaminationapi";
 	public static final String MODNAME = "Contamination";
 	public static final String MODVERSION = "@VERSION@";
@@ -105,5 +115,64 @@ public class ContaminationMod extends BaseModFoundation<ContaminationMod> {
 	@Override
 	public ContaminationMod getInstance() {
 		return instance;
+	}
+	
+	@SubscribeEvent
+	public static void onServerTick(TickEvent.ServerTickEvent event) {
+		//Only run full logic every second
+		if(currentTicks < maxTicks) {
+			currentTicks++;
+		}
+		else {
+			WorldServer world = DimensionManager.getWorld(0);
+			for (Iterator<Chunk> iterator = world.getPersistentChunkIterable(world.getPlayerChunkMap().getChunkIterator()); iterator.hasNext();)
+	        {
+	            Chunk chunk = iterator.next();
+	            //Begin contamination spread handling
+				Chunk n1 = world.getChunk(chunk.x + 1, chunk.z);
+				if(n1.isLoaded()) {
+					trySpreadPollution(chunk, n1);
+				}
+				Chunk n2 = world.getChunk(chunk.x - 1, chunk.z);
+				if(n2.isLoaded()) {
+					trySpreadPollution(chunk, n2);
+				}
+				Chunk n3 = world.getChunk(chunk.x, chunk.z + 1);
+				if(n3.isLoaded()) {
+					trySpreadPollution(chunk, n3);
+				}
+				Chunk n4 = world.getChunk(chunk.x, chunk.z - 1);
+				if(n4.isLoaded()) {
+					trySpreadPollution(chunk, n4);
+				}
+				//Begin contamination effect handling
+	            IContaminationHolder pollution = chunk.getCapability(ContaminationMod.CONTAMINATION_HOLDER_CAPABILITY, null);
+	            for(int pos = 0; pos < ContaminationTypeRegistry.getNumberOfTypes(); pos++) {
+		            IContaminationType type = ContaminationTypeRegistry.getAtPosition(pos);
+		            int current = pollution.get(pos);
+		            if(current > 0) {
+		            	for(IContaminationEffect effect : type.getEffectSet()) {
+		            		if(effect instanceof IWorldTickEffect && current >= effect.getThreshold()) {
+		            			effect.triggerEffect(chunk);
+		            		}
+		            	}
+		            }
+	            }
+	        }
+			currentTicks = 0;
+		}
+	}
+
+	private static void trySpreadPollution(Chunk source, Chunk neighbour) {
+		if(source.getWorld().rand.nextInt(200) == 0) {
+			IContaminationHolder sourceC = source.getCapability(ContaminationMod.CONTAMINATION_HOLDER_CAPABILITY, null);
+			IContaminationHolder neighbourC = neighbour.getCapability(ContaminationMod.CONTAMINATION_HOLDER_CAPABILITY, null);
+	        for(int pos = 0; pos < ContaminationTypeRegistry.getNumberOfTypes(); pos++) {
+	            if(sourceC.get(pos) > 0 && sourceC.get(pos) > neighbourC.get(pos)) {
+	            	sourceC.set(pos, sourceC.get(pos) - 1, true);
+	            	neighbourC.set(pos, neighbourC.get(pos) + 1, true);
+	            }
+	        }
+		}
 	}
 }

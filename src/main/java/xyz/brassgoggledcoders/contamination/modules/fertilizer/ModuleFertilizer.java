@@ -1,7 +1,6 @@
 package xyz.brassgoggledcoders.contamination.modules.fertilizer;
 
 import java.awt.Color;
-import java.util.Iterator;
 
 import com.teamacronymcoders.base.modulesystem.Module;
 import com.teamacronymcoders.base.modulesystem.ModuleBase;
@@ -11,22 +10,18 @@ import net.minecraft.item.EnumDyeColor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextComponentString;
-import net.minecraft.world.WorldServer;
 import net.minecraft.world.chunk.Chunk;
-import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.gameevent.TickEvent;
 import xyz.brassgoggledcoders.contamination.ContaminationMod;
 import xyz.brassgoggledcoders.contamination.ContaminationMod.ContaminationInteracterProvider;
 import xyz.brassgoggledcoders.contamination.ContaminationType;
 import xyz.brassgoggledcoders.contamination.api.*;
 import xyz.brassgoggledcoders.contamination.api.effect.IContaminationEffect;
-import xyz.brassgoggledcoders.contamination.api.effect.IWorldTickEffect;
 
 @Module(value = ContaminationMod.MODID)
 @EventBusSubscriber(modid = ContaminationMod.MODID) //TODO This won't get disabled when the module is disabled
@@ -84,24 +79,6 @@ public class ModuleFertilizer extends ModuleBase {
         			effect.triggerEffect(event.getEntityLiving(), current);
         		}
         	}
-	}
-	
-	@SubscribeEvent
-	public static void onServerTick(TickEvent.ServerTickEvent event) {
-		WorldServer world = DimensionManager.getWorld(0);
-		for (Iterator<Chunk> iterator = world.getPersistentChunkIterable(world.getPlayerChunkMap().getChunkIterator()); iterator.hasNext();)
-        {
-            Chunk chunk = iterator.next();
-            IContaminationHolder pollution = chunk.getCapability(ContaminationMod.CONTAMINATION_HOLDER_CAPABILITY, null);
-            int current = pollution.get(ContaminationTypeRegistry.getPosition(fertilizer));
-            if(current > 0) {
-            	for(IContaminationEffect effect : fertilizer.getEffectSet()) {
-            		if(effect instanceof IWorldTickEffect && current >= effect.getThreshold()) {
-            			effect.triggerEffect(chunk);
-            		}
-            	}
-            }
-        }
 	}
 	
 	@Override
