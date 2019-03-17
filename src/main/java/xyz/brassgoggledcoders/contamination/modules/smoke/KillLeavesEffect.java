@@ -11,7 +11,7 @@ public class KillLeavesEffect implements IWorldTickEffect {
 
 	@Override
 	public int getThreshold() {
-		return 50;
+		return 60;
 	}
 
 	@Override
@@ -24,8 +24,8 @@ public class KillLeavesEffect implements IWorldTickEffect {
 		int z = chunk.z * 16 + world.rand.nextInt(16);
         BlockPos randomPos = new BlockPos(x, chunk.getHeight(new BlockPos(x, 0, z)), z);
         randomPos = randomPos.down();
-        if(world.isAreaLoaded(randomPos, 1) && world.getBlockState(randomPos).getBlock() == Blocks.DIRT || world.getBlockState(randomPos).getBlock() == Blocks.GRASS) {
-        	world.setBlockState(randomPos, Blocks.DIRT.getStateFromMeta(1), 3);
+        if(world.isAreaLoaded(randomPos, 1) && world.getBlockState(randomPos).getBlock() == Blocks.LEAVES || world.getBlockState(randomPos).getBlock() == Blocks.LEAVES2) {
+        	world.setBlockToAir(randomPos);
         	chunk.markDirty();
             ContaminationMod.instance.getLogger().devInfo(randomPos.toString());
         }
