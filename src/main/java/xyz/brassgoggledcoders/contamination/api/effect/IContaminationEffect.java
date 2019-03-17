@@ -1,4 +1,4 @@
-package xyz.brassgoggledcoders.contamination.api;
+package xyz.brassgoggledcoders.contamination.api.effect;
 
 import javax.annotation.Nullable;
 

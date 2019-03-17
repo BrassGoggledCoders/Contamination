@@ -1,6 +1,6 @@
 package xyz.brassgoggledcoders.contamination;
 
-import xyz.brassgoggledcoders.contamination.api.IContaminationEffect;
+import xyz.brassgoggledcoders.contamination.api.effect.IContaminationEffect;
 
 public class ContaminationEffectTest implements IContaminationEffect {
 

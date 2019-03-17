@@ -4,9 +4,8 @@ import net.minecraft.init.Blocks;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
-import net.minecraftforge.fml.common.FMLLog;
 import xyz.brassgoggledcoders.contamination.ContaminationMod;
-import xyz.brassgoggledcoders.contamination.api.IWorldTickEffect;
+import xyz.brassgoggledcoders.contamination.api.effect.IWorldTickEffect;
 
 public class DirtDecayEffect implements IWorldTickEffect {
 
@@ -25,7 +24,6 @@ public class DirtDecayEffect implements IWorldTickEffect {
 		int z = chunk.z * 16 + world.rand.nextInt(16);
         BlockPos randomPos = new BlockPos(x, chunk.getHeight(new BlockPos(x, 0, z)), z);
         randomPos = randomPos.down();
-        FMLLog.warning(world.getBlockState(randomPos).getBlock().getTranslationKey());
         if(world.isAreaLoaded(randomPos, 1) && world.getBlockState(randomPos).getBlock() == Blocks.DIRT || world.getBlockState(randomPos).getBlock() == Blocks.GRASS) {
         	world.setBlockState(randomPos, Blocks.DIRT.getStateFromMeta(1), 3);
         	chunk.markDirty();

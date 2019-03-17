@@ -1,4 +1,4 @@
-package xyz.brassgoggledcoders.contamination.modules.vanilla;
+package xyz.brassgoggledcoders.contamination.modules.smoke;
 
 import java.awt.Color;
 
@@ -20,10 +20,11 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import xyz.brassgoggledcoders.contamination.*;
 import xyz.brassgoggledcoders.contamination.ContaminationMod.ContaminationInteracterProvider;
 import xyz.brassgoggledcoders.contamination.api.*;
+import xyz.brassgoggledcoders.contamination.api.effect.IContaminationEffect;
 
 @Module(value = ContaminationMod.MODID)
 @EventBusSubscriber(modid = ContaminationMod.MODID) //TODO This won't get disabled when the module is disabled
-public class ModuleVanilla extends ModuleBase {
+public class ModuleSmoke extends ModuleBase {
 
 	static IContaminationType smoke = new ContaminationType("smoke", Color.BLACK.getRed(), new ContaminationEffectTest(), new ContaminationEffectBlindness());
 	
@@ -84,7 +85,7 @@ public class ModuleVanilla extends ModuleBase {
 	
 	@Override
 	public String getName() {
-		return "Vanilla Pollution";
+		return "Smoke";
 	}
 
 }

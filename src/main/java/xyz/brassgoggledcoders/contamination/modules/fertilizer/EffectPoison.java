@@ -5,7 +5,7 @@ import javax.annotation.Nullable;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
-import xyz.brassgoggledcoders.contamination.api.IContaminationEffect;
+import xyz.brassgoggledcoders.contamination.api.effect.IContaminationEffect;
 
 public class EffectPoison implements IContaminationEffect {
 

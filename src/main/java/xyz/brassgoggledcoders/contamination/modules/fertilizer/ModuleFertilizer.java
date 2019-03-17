@@ -25,6 +25,8 @@ import xyz.brassgoggledcoders.contamination.ContaminationMod;
 import xyz.brassgoggledcoders.contamination.ContaminationMod.ContaminationInteracterProvider;
 import xyz.brassgoggledcoders.contamination.ContaminationType;
 import xyz.brassgoggledcoders.contamination.api.*;
+import xyz.brassgoggledcoders.contamination.api.effect.IContaminationEffect;
+import xyz.brassgoggledcoders.contamination.api.effect.IWorldTickEffect;
 
 @Module(value = ContaminationMod.MODID)
 @EventBusSubscriber(modid = ContaminationMod.MODID) //TODO This won't get disabled when the module is disabled
@@ -104,7 +106,7 @@ public class ModuleFertilizer extends ModuleBase {
 	
 	@Override
 	public String getName() {
-		return "Fertilizer Runoff Pollution";
+		return "Fertilizer Runoff";
 	}
 
 }

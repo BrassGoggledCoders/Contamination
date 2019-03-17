@@ -4,8 +4,8 @@ import java.util.Set;
 
 import com.google.common.collect.Sets;
 
-import xyz.brassgoggledcoders.contamination.api.IContaminationEffect;
 import xyz.brassgoggledcoders.contamination.api.IContaminationType;
+import xyz.brassgoggledcoders.contamination.api.effect.IContaminationEffect;
 
 public class ContaminationType implements IContaminationType {
 	public String name;
