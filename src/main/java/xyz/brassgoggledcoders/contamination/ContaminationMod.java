@@ -18,6 +18,7 @@ import net.minecraftforge.common.capabilities.*;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
+import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.*;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
@@ -38,6 +39,10 @@ public class ContaminationMod extends BaseModFoundation<ContaminationMod> {
 	public static final String MODVERSION = "@VERSION@";
 	@Instance(MODID)
 	public static ContaminationMod instance;
+	
+	static {
+		FluidRegistry.enableUniversalBucket();
+	}
 
 	public ContaminationMod() {
 		super(MODID, MODNAME, MODVERSION, null);
