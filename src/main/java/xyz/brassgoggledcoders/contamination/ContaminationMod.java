@@ -14,6 +14,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.WorldServer;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.common.DimensionManager;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.*;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
@@ -26,6 +27,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import xyz.brassgoggledcoders.contamination.api.*;
 import xyz.brassgoggledcoders.contamination.api.effect.*;
+import xyz.brassgoggledcoders.contamination.events.ContaminationUpdateEvent;
 
 @Mod(modid = ContaminationMod.MODID, name = ContaminationMod.MODNAME, version = ContaminationMod.MODVERSION)
 @EventBusSubscriber
@@ -151,6 +153,7 @@ public class ContaminationMod extends BaseModFoundation<ContaminationMod> {
 				IContaminationHolder pollution = chunk.getCapability(ContaminationMod.CONTAMINATION_HOLDER_CAPABILITY,
 						null);
 				pollution.set(typePos, pollution.get(typePos) + delta, true);
+				MinecraftForge.EVENT_BUS.post(new ContaminationUpdateEvent(chunk, ContaminationTypeRegistry.getAtPosition(typePos), pollution.get(typePos), delta));
 			}
 		}
 	}
@@ -196,6 +199,7 @@ public class ContaminationMod extends BaseModFoundation<ContaminationMod> {
 								int red = effect.getReductionOnEffect(world.getDifficulty(), world.rand);
 								if(red > 0) {
 									pollution.set(pos, red, true);
+									MinecraftForge.EVENT_BUS.post(new ContaminationUpdateEvent(chunk, ContaminationTypeRegistry.getAtPosition(pos), pollution.get(pos), red));
 								}
 							}
 						}
@@ -215,7 +219,9 @@ public class ContaminationMod extends BaseModFoundation<ContaminationMod> {
 			for(int pos = 0; pos < ContaminationTypeRegistry.getNumberOfTypes(); pos++) {
 				if(sourceC.get(pos) > 1 && sourceC.get(pos) > neighbourC.get(pos)) {
 					sourceC.set(pos, sourceC.get(pos) - 1, true);
+					MinecraftForge.EVENT_BUS.post(new ContaminationUpdateEvent(source, ContaminationTypeRegistry.getAtPosition(pos), sourceC.get(pos), 1));
 					neighbourC.set(pos, neighbourC.get(pos) + 1, true);
+					MinecraftForge.EVENT_BUS.post(new ContaminationUpdateEvent(neighbour, ContaminationTypeRegistry.getAtPosition(pos), neighbourC.get(pos), 1));
 				}
 			}
 		}
