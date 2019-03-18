@@ -21,7 +21,7 @@ import xyz.brassgoggledcoders.contamination.api.IContaminationType;
 @EventBusSubscriber(modid = ContaminationMod.MODID) //TODO This won't get disabled when the module is disabled
 public class ModuleSmoke extends ModuleBase {
 
-	static IContaminationType smoke = new ContaminationType("smoke", Color.BLACK.getRed(), new EffectPotion(100, "blindness", false), new KillLeavesEffect(), new KillPlantsEffect());
+	public static IContaminationType smoke = new ContaminationType("smoke", Color.BLACK.getRed(), new EffectPotion(100, "blindness", false), new KillLeavesEffect(), new KillPlantsEffect());
 	
 	@Override
     public void preInit(FMLPreInitializationEvent event) {

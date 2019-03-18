@@ -19,6 +19,7 @@ import net.minecraftforge.common.capabilities.*;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
+import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.*;
@@ -241,6 +242,13 @@ public class ContaminationMod extends BaseModFoundation<ContaminationMod> {
 					}
 				}
 			}
+		}
+	}
+	
+	@SubscribeEvent
+	public static void onWorldLoad(WorldEvent.Load event) {
+		if(!event.getWorld().isRemote) {
+			event.getWorld().addEventListener(new WorldEventHandler((WorldServer) event.getWorld()));
 		}
 	}
 }
