@@ -7,18 +7,22 @@ import com.teamacronymcoders.base.modulesystem.ModuleBase;
 import com.teamacronymcoders.base.registrysystem.BlockRegistry;
 import com.teamacronymcoders.base.registrysystem.config.ConfigRegistry;
 
+import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.init.Items;
 import net.minecraft.item.EnumDyeColor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.storage.loot.LootTableList;
+import net.minecraft.world.storage.loot.properties.EntityPropertyManager;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.registry.GameRegistry.ObjectHolder;
 import xyz.brassgoggledcoders.contamination.*;
 import xyz.brassgoggledcoders.contamination.ContaminationMod.ContaminationInteracterProvider;
 import xyz.brassgoggledcoders.contamination.api.ContaminationTypeRegistry;
@@ -26,14 +30,18 @@ import xyz.brassgoggledcoders.contamination.api.IContaminationType;
 
 @Module(value = ContaminationMod.MODID)
 @EventBusSubscriber(modid = ContaminationMod.MODID) //TODO This won't get disabled when the module is disabled
+@ObjectHolder(ContaminationMod.MODID)
 public class ModuleFertilizer extends ModuleBase {
-
+	
+	public static final Block algea = null;
 	static IContaminationType fertilizer = new ContaminationType("fertilizer", Color.WHITE.getRGB(), new EffectPotion(70, "poison", true), new DirtDecayEffect());
 	
 	@Override
     public void preInit(FMLPreInitializationEvent event) {
 		super.preInit(event);
 		ContaminationTypeRegistry.addContaminationType(fertilizer);
+		LootTableList.register(new ResourceLocation(ContaminationMod.MODID, "algea_fishing"));
+		EntityPropertyManager.registerProperty(new EntityInBlock.Serializer());
 	}
 	
 	@Override

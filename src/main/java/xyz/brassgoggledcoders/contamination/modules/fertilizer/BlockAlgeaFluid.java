@@ -20,6 +20,7 @@ public class BlockAlgeaFluid extends BlockFluidBase {
 	DamageSource source;
 	int damage;
 
+	//TODO When this displaces water, have it take that water's level
 	public BlockAlgeaFluid(String name, Fluid fluid, Material material, DamageSource source, int damage) {
 		super(name, fluid, material);
 		this.name = name;
