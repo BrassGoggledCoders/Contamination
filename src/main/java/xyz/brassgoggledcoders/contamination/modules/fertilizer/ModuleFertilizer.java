@@ -34,7 +34,7 @@ import xyz.brassgoggledcoders.contamination.api.IContaminationType;
 public class ModuleFertilizer extends ModuleBase {
 	
 	public static final Block algea = null;
-	static IContaminationType fertilizer = new ContaminationType("fertilizer", Color.WHITE.getRGB(), new EffectPotion(70, "poison", true), new DirtDecayEffect());
+	static IContaminationType fertilizer = new ContaminationType("fertilizer", Color.WHITE.getRGB(), new EffectPotion(70, "poison", true), new DirtDecayEffect(), new OvergrowthEffect());
 	
 	@Override
     public void preInit(FMLPreInitializationEvent event) {
