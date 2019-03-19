@@ -11,10 +11,10 @@ import net.minecraft.world.*;
 import xyz.brassgoggledcoders.contamination.api.IContaminationHolder;
 import xyz.brassgoggledcoders.contamination.modules.smoke.ModuleSmoke;
 
-public class WorldEventHandler implements IWorldEventListener {
+public class WorldEventListener implements IWorldEventListener {
     private final WorldServer world;
 
-    public WorldEventHandler(WorldServer worldServerIn)
+    public WorldEventListener(WorldServer worldServerIn)
     {
         this.world = worldServerIn;
     }
@@ -22,13 +22,21 @@ public class WorldEventHandler implements IWorldEventListener {
 	@Override
 	public void notifyBlockUpdate(World worldIn, BlockPos pos, IBlockState oldState, IBlockState newState, int flags) {
 		if(newState.getBlock() == Blocks.FIRE || newState.getBlock() == Blocks.LAVA) {
-			IContaminationHolder holder = worldIn.getChunk(pos).getCapability(ContaminationMod.CONTAMINATION_HOLDER_CAPABILITY,
+			IContaminationHolder holder = worldIn.getChunk(pos).getCapability(Contamination.CONTAMINATION_HOLDER_CAPABILITY,
 					null);
+			if(holder == null) {
+				//What?
+				return;
+			}
 			holder.modify(ModuleSmoke.smoke, 1);
 		}
 		else if(newState.getBlock() == Blocks.LIT_FURNACE) {
-			IContaminationHolder holder = worldIn.getChunk(pos).getCapability(ContaminationMod.CONTAMINATION_HOLDER_CAPABILITY,
+			IContaminationHolder holder = worldIn.getChunk(pos).getCapability(Contamination.CONTAMINATION_HOLDER_CAPABILITY,
 					null);
+			if(holder == null) {
+				//What?
+				return;
+			}
 			holder.modify(ModuleSmoke.smoke, 3);
 		}
 	}

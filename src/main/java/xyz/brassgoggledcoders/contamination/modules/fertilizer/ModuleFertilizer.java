@@ -32,14 +32,14 @@ import net.minecraftforge.fml.common.registry.EntityEntry;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
 import net.minecraftforge.fml.common.registry.GameRegistry.ObjectHolder;
 import xyz.brassgoggledcoders.contamination.*;
-import xyz.brassgoggledcoders.contamination.ContaminationMod.ContaminationInteracterProvider;
+import xyz.brassgoggledcoders.contamination.Contamination.ContaminationInteracterProvider;
 import xyz.brassgoggledcoders.contamination.api.types.ContaminationTypeRegistry;
 import xyz.brassgoggledcoders.contamination.api.types.IContaminationType;
 import xyz.brassgoggledcoders.contamination.effects.EffectPotion;
 
-@Module(value = ContaminationMod.MODID)
-@EventBusSubscriber(modid = ContaminationMod.MODID) //TODO This won't get disabled when the module is disabled
-@ObjectHolder(ContaminationMod.MODID)
+@Module(value = Contamination.MODID)
+@EventBusSubscriber(modid = Contamination.MODID) //TODO This won't get disabled when the module is disabled
+@ObjectHolder(Contamination.MODID)
 public class ModuleFertilizer extends ModuleBase {
 	
 	public static final Block algea = null;
@@ -49,14 +49,14 @@ public class ModuleFertilizer extends ModuleBase {
     public void preInit(FMLPreInitializationEvent event) {
 		super.preInit(event);
 		ContaminationTypeRegistry.addContaminationType(fertilizer);
-		LootTableList.register(new ResourceLocation(ContaminationMod.MODID, "algea_fishing"));
+		LootTableList.register(new ResourceLocation(Contamination.MODID, "algea_fishing"));
 		EntityPropertyManager.registerProperty(new EntityInBlock.Serializer());
 	}
 	
 	@Override
 	public void registerBlocks(ConfigRegistry config, BlockRegistry blocks) {
-		Fluid algea = new Fluid("algea", new ResourceLocation(ContaminationMod.MODID, "fluids/algea"),
-				new ResourceLocation(ContaminationMod.MODID, "fluids/algea"));
+		Fluid algea = new Fluid("algea", new ResourceLocation(Contamination.MODID, "fluids/algea"),
+				new ResourceLocation(Contamination.MODID, "fluids/algea"));
 		FluidRegistry.registerFluid(algea);
 		FluidRegistry.addBucketForFluid(algea);
 		blocks.register(new BlockAlgeaFluid("algea", FluidRegistry.getFluid("algea"),
@@ -66,8 +66,8 @@ public class ModuleFertilizer extends ModuleBase {
 	@SubscribeEvent
 	public static void registerEntities(RegistryEvent.Register<EntityEntry> event) {
 		int networkID = 0;
-		EntityRegistry.registerModEntity(new ResourceLocation(ContaminationMod.MODID, "fertilizer_creeper"), EntityFertilizerCreeper.class,
-				"fertilizer_creeper", networkID++, ContaminationMod.MODID, 64, 1, true);
+		EntityRegistry.registerModEntity(new ResourceLocation(Contamination.MODID, "fertilizer_creeper"), EntityFertilizerCreeper.class,
+				"fertilizer_creeper", networkID++, Contamination.MODID, 64, 1, true);
 		EntityRegistry.addSpawn(EntityFertilizerCreeper.class, 100, 1, 2, EnumCreatureType.MONSTER, BiomeDictionary.getBiomes(BiomeDictionary.Type.WET).toArray(new Biome[0]));
 		EntityRegistry.addSpawn(EntityFertilizerCreeper.class, 100, 1, 2, EnumCreatureType.MONSTER, BiomeDictionary.getBiomes(BiomeDictionary.Type.JUNGLE).toArray(new Biome[0]));
 		EntityRegistry.addSpawn(EntityFertilizerCreeper.class, 150, 1, 2, EnumCreatureType.MONSTER, BiomeDictionary.getBiomes(BiomeDictionary.Type.LUSH).toArray(new Biome[0]));
@@ -81,7 +81,7 @@ public class ModuleFertilizer extends ModuleBase {
 	@SubscribeEvent
 	public static void attachItemCaps(AttachCapabilitiesEvent<ItemStack> event) {
 		if(event.getObject().getItem() == Items.DYE && EnumDyeColor.byDyeDamage(event.getObject().getMetadata()) == EnumDyeColor.WHITE) {
-			event.addCapability(new ResourceLocation(ContaminationMod.MODID, "contamination_interacter"), new ContaminationInteracterProvider(fertilizer, 1));
+			event.addCapability(new ResourceLocation(Contamination.MODID, "contamination_interacter"), new ContaminationInteracterProvider(fertilizer, 1));
 		}
 	}
 	

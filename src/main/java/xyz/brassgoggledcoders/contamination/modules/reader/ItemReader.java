@@ -10,7 +10,7 @@ import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.translation.I18n;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
-import xyz.brassgoggledcoders.contamination.ContaminationMod;
+import xyz.brassgoggledcoders.contamination.Contamination;
 import xyz.brassgoggledcoders.contamination.api.*;
 import xyz.brassgoggledcoders.contamination.api.types.ContaminationTypeRegistry;
 import xyz.brassgoggledcoders.contamination.api.types.IContaminationType;
@@ -31,7 +31,7 @@ public class ItemReader extends ItemBase {
     {
 		if(!worldIn.isRemote) {
 			Chunk chunk = worldIn.getChunk(playerIn.getPosition());
-	    	IContaminationHolder pollution = chunk.getCapability(ContaminationMod.CONTAMINATION_HOLDER_CAPABILITY, null);
+	    	IContaminationHolder pollution = chunk.getCapability(Contamination.CONTAMINATION_HOLDER_CAPABILITY, null);
 	    	if(typeName.equals("debug")) {
 	    		for(IContaminationType type : ContaminationTypeRegistry.getAllTypes()) {
 		            playerIn.sendStatusMessage(new TextComponentString(type.getLocalizedName() + " " + I18n.translateToLocal("contamination.name") +  ": " + pollution.get(type)), false);

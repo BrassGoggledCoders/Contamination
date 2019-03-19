@@ -8,7 +8,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.EnumDifficulty;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
-import xyz.brassgoggledcoders.contamination.ContaminationMod;
+import xyz.brassgoggledcoders.contamination.Contamination;
 import xyz.brassgoggledcoders.contamination.api.effect.IWorldTickEffect;
 
 public class OvergrowthEffect implements IWorldTickEffect {
@@ -32,7 +32,7 @@ public class OvergrowthEffect implements IWorldTickEffect {
         	world.setBlockState(randomPos.up(), Blocks.DOUBLE_PLANT.getDefaultState().withProperty(BlockDoublePlant.VARIANT, BlockDoublePlant.EnumPlantType.GRASS).withProperty(BlockDoublePlant.HALF, BlockDoublePlant.EnumBlockHalf.LOWER), 2);
         	world.setBlockState(randomPos.up(2), Blocks.DOUBLE_PLANT.getDefaultState().withProperty(BlockDoublePlant.VARIANT, BlockDoublePlant.EnumPlantType.GRASS).withProperty(BlockDoublePlant.HALF, BlockDoublePlant.EnumBlockHalf.UPPER), 3);
         	chunk.markDirty();
-            ContaminationMod.instance.getLogger().devInfo(randomPos.toString());
+            Contamination.instance.getLogger().devInfo(randomPos.toString());
         }
 	}
 

@@ -7,7 +7,7 @@ import journeymap.client.api.model.ShapeProperties;
 import journeymap.client.api.util.PolygonHelper;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import xyz.brassgoggledcoders.contamination.ContaminationMod;
+import xyz.brassgoggledcoders.contamination.Contamination;
 import xyz.brassgoggledcoders.contamination.events.ContaminationUpdateEvent;
 
 @ClientPlugin
@@ -25,7 +25,7 @@ public class ContaminationMapPlugin implements IClientPlugin {
 
 	@Override
 	public String getModId() {
-		return ContaminationMod.MODID;
+		return Contamination.MODID;
 	}
 
 	@Override

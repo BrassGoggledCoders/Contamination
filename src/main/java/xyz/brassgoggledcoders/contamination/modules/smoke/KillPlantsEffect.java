@@ -7,7 +7,7 @@ import net.minecraft.world.EnumDifficulty;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.common.IPlantable;
-import xyz.brassgoggledcoders.contamination.ContaminationMod;
+import xyz.brassgoggledcoders.contamination.Contamination;
 import xyz.brassgoggledcoders.contamination.api.effect.IWorldTickEffect;
 
 public class KillPlantsEffect implements IWorldTickEffect {
@@ -30,7 +30,7 @@ public class KillPlantsEffect implements IWorldTickEffect {
         if(world.isAreaLoaded(randomPos, 1) && world.getBlockState(randomPos).getBlock() instanceof IPlantable) {
         	world.setBlockToAir(randomPos);
         	chunk.markDirty();
-            ContaminationMod.instance.getLogger().devInfo(randomPos.toString());
+            Contamination.instance.getLogger().devInfo(randomPos.toString());
         }
 	}
 

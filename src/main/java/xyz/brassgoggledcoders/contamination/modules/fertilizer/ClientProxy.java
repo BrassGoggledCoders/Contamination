@@ -10,7 +10,7 @@ import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fml.client.registry.IRenderFactory;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.event.*;
-import xyz.brassgoggledcoders.contamination.ContaminationMod;
+import xyz.brassgoggledcoders.contamination.Contamination;
 
 public class ClientProxy implements IModuleProxy {
 	
@@ -24,7 +24,7 @@ public class ClientProxy implements IModuleProxy {
 	@Override
 	public void init(FMLInitializationEvent event) {
 		Base.instance.getLibProxy().registerFluidModel(FluidRegistry.getFluid("algea").getBlock(),
-				new ResourceLocation(ContaminationMod.MODID, "algea"));
+				new ResourceLocation(Contamination.MODID, "algea"));
 	}
 
 	@Override

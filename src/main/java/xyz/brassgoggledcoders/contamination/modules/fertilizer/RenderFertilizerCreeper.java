@@ -4,11 +4,11 @@ import net.minecraft.client.model.ModelCreeper;
 import net.minecraft.client.renderer.entity.RenderLiving;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.util.ResourceLocation;
-import xyz.brassgoggledcoders.contamination.ContaminationMod;
+import xyz.brassgoggledcoders.contamination.Contamination;
 
 public class RenderFertilizerCreeper extends RenderLiving<EntityFertilizerCreeper>
 {
-    public static final ResourceLocation TEXTURES = new ResourceLocation(ContaminationMod.MODID,"textures/entity/fertilizer_creeper.png");
+    public static final ResourceLocation TEXTURES = new ResourceLocation(Contamination.MODID,"textures/entity/fertilizer_creeper.png");
  
     public RenderFertilizerCreeper(RenderManager renderManagerIn)
     {

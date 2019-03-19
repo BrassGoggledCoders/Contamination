@@ -7,9 +7,9 @@ import com.teamacronymcoders.base.modulesystem.ModuleBase;
 import com.teamacronymcoders.base.modulesystem.dependencies.IDependency;
 import com.teamacronymcoders.base.modulesystem.dependencies.ModDependency;
 
-import xyz.brassgoggledcoders.contamination.ContaminationMod;
+import xyz.brassgoggledcoders.contamination.Contamination;
 
-@Module(ContaminationMod.MODID)
+@Module(Contamination.MODID)
 public class JourneyMapModule extends ModuleBase {
     @Override
     public String getName() {

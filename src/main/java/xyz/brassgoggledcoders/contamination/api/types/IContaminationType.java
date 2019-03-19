@@ -13,6 +13,6 @@ public interface IContaminationType {
 		return I18n.translateToLocal("contamination." + getRegistryName());
 	}
 	public int getColor();
-	//TODO Typed sub-sets to reduce loop sizes
+	//TODO Make this a hashmap with threshold as the key to filter out currently irrelevant effects. But how do we resolve duplicate keys?
 	public Set<IContaminationEffect> getEffectSet(EnumEffectType type);
 }

@@ -4,5 +4,6 @@ package xyz.brassgoggledcoders.contamination.api.effect;
 public enum EnumEffectType {
 	ENTITYTICK,
 	WORLDTICK,
+	OVERLAY,
 	OTHER
 }

@@ -6,11 +6,11 @@ import com.teamacronymcoders.base.registrysystem.ItemRegistry;
 import com.teamacronymcoders.base.registrysystem.config.ConfigRegistry;
 
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-import xyz.brassgoggledcoders.contamination.ContaminationMod;
+import xyz.brassgoggledcoders.contamination.Contamination;
 import xyz.brassgoggledcoders.contamination.api.types.ContaminationTypeRegistry;
 import xyz.brassgoggledcoders.contamination.api.types.IContaminationType;
 
-@Module(ContaminationMod.MODID)
+@Module(Contamination.MODID)
 public class ModuleReader extends ModuleBase {
 	@Override
     public void registerItems(ConfigRegistry configRegistry, ItemRegistry itemRegistry) {

@@ -17,9 +17,11 @@ public class ContaminationType implements IContaminationType {
 	public ContaminationType(String name, int color, IContaminationEffect... effectSet) {
 		this.name = name;
 		this.color = color;
+		//TODO This needs to be automatic in some way
 		Set<IContaminationEffect> other = Sets.newHashSet();
 		Set<IContaminationEffect> entityTick = Sets.newHashSet();
 		Set<IContaminationEffect> worldTick = Sets.newHashSet();
+		Set<IContaminationEffect> overlay = Sets.newHashSet();
 		for(IContaminationEffect effect : effectSet) {
 			if(effect instanceof IEntityTickEffect) {
 				entityTick.add(effect);
@@ -27,12 +29,16 @@ public class ContaminationType implements IContaminationType {
 			else if(effect instanceof IWorldTickEffect) {
 				worldTick.add(effect);
 			}
+			else if(effect instanceof IOverlayEffect) {
+				overlay.add(effect);
+			}
 			else {
 				other.add(effect);
 			}
 		}
 		effectSets.put(EnumEffectType.ENTITYTICK, entityTick);
 		effectSets.put(EnumEffectType.WORLDTICK, worldTick);
+		effectSets.put(EnumEffectType.OVERLAY, overlay);
 		effectSets.put(EnumEffectType.OTHER, other);
 	}
 

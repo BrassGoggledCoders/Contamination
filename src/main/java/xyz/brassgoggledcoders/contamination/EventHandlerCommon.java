@@ -2,30 +2,20 @@ package xyz.brassgoggledcoders.contamination;
 
 import java.util.Iterator;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
-import com.teamacronymcoders.base.BaseModFoundation;
-
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTBase;
-import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.WorldServer;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.common.capabilities.*;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.world.WorldEvent;
-import net.minecraftforge.fluids.FluidRegistry;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.Mod.*;
-import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
+import xyz.brassgoggledcoders.contamination.Contamination.ContaminationProvider;
 import xyz.brassgoggledcoders.contamination.api.IContaminationHolder;
 import xyz.brassgoggledcoders.contamination.api.effect.*;
 import xyz.brassgoggledcoders.contamination.api.modifiers.IContaminationInteracter;
@@ -33,104 +23,16 @@ import xyz.brassgoggledcoders.contamination.api.types.ContaminationTypeRegistry;
 import xyz.brassgoggledcoders.contamination.api.types.IContaminationType;
 import xyz.brassgoggledcoders.contamination.events.ContaminationUpdateEvent;
 
-@Mod(modid = ContaminationMod.MODID, name = ContaminationMod.MODNAME, version = ContaminationMod.MODVERSION)
-@EventBusSubscriber
-public class ContaminationMod extends BaseModFoundation<ContaminationMod> {
-
-	public static final String MODID = "contamination";
-	public static final String MODNAME = "Contamination";
-	public static final String MODVERSION = "@VERSION@";
-	@Instance(MODID)
-	public static ContaminationMod instance;
+@EventBusSubscriber(modid = Contamination.MODID)
+public class EventHandlerCommon {
 	
-	static {
-		FluidRegistry.enableUniversalBucket();
-	}
-
-	public ContaminationMod() {
-		super(MODID, MODNAME, MODVERSION, null);
-	}
-
-	@CapabilityInject(IContaminationHolder.class)
-	public static Capability<IContaminationHolder> CONTAMINATION_HOLDER_CAPABILITY = null;
-	@CapabilityInject(IContaminationInteracter.class)
-	public static Capability<IContaminationInteracter> CONTAMINATION_INTERACTER_CAPABILITY = null;
-
-	@EventHandler
-	@Override
-	public void preInit(FMLPreInitializationEvent event) {
-		super.preInit(event);
-		CapabilityManager.INSTANCE.register(IContaminationHolder.class, new IContaminationHolder.Storage(),
-				new IContaminationHolder.Factory());
-		CapabilityManager.INSTANCE.register(IContaminationInteracter.class, new IContaminationInteracter.Storage(),
-				new IContaminationInteracter.Factory());
-	}
-
 	@SubscribeEvent
 	public static void attachChunkCaps(AttachCapabilitiesEvent<Chunk> event) {
 		// TODO Only attach the capability when an interacter is placed in the chunk?
-		event.addCapability(new ResourceLocation(MODID, "contamination_holder"),
+		event.addCapability(new ResourceLocation(Contamination.MODID, "contamination_holder"),
 				new ContaminationProvider(event.getObject()));
 	}
-
-	public static class ContaminationInteracterProvider implements ICapabilityProvider {
-		private final IContaminationInteracter contamination;
-
-		public ContaminationInteracterProvider(IContaminationType type, int value) {
-			contamination = new IContaminationInteracter.Implementation(type, value);
-		}
-
-		@Override
-		public boolean hasCapability(@Nonnull Capability<?> capability, @Nullable EnumFacing facing) {
-			return capability == CONTAMINATION_INTERACTER_CAPABILITY;
-		}
-
-		@Nullable
-		@Override
-		public <T> T getCapability(@Nonnull Capability<T> capability, @Nullable EnumFacing facing) {
-			return capability == CONTAMINATION_INTERACTER_CAPABILITY
-					? CONTAMINATION_INTERACTER_CAPABILITY.cast(contamination)
-					: null;
-		}
-	}
-
-	public static class ContaminationProvider implements ICapabilitySerializable<NBTBase> {
-		private final IContaminationHolder contamination;
-
-		public ContaminationProvider(Chunk chunk) {
-			contamination = new IContaminationHolder.SafeImplementation(chunk);
-		}
-
-		@Override
-		public NBTBase serializeNBT() {
-			return CONTAMINATION_HOLDER_CAPABILITY.getStorage().writeNBT(CONTAMINATION_HOLDER_CAPABILITY, contamination,
-					null);
-		}
-
-		@Override
-		public void deserializeNBT(NBTBase nbt) {
-			CONTAMINATION_HOLDER_CAPABILITY.getStorage().readNBT(CONTAMINATION_HOLDER_CAPABILITY, contamination, null,
-					nbt);
-		}
-
-		@Override
-		public boolean hasCapability(@Nonnull Capability<?> capability, @Nullable EnumFacing facing) {
-			return capability == CONTAMINATION_HOLDER_CAPABILITY;
-		}
-
-		@Nullable
-		@Override
-		public <T> T getCapability(@Nonnull Capability<T> capability, @Nullable EnumFacing facing) {
-			return capability == CONTAMINATION_HOLDER_CAPABILITY ? CONTAMINATION_HOLDER_CAPABILITY.cast(contamination)
-					: null;
-		}
-	}
-
-	@Override
-	public ContaminationMod getInstance() {
-		return instance;
-	}
-
+	
 	@SubscribeEvent
 	public static void onUseItem(PlayerInteractEvent.RightClickBlock event) {
 		if(!event.getWorld().isRemote) {
@@ -138,9 +40,9 @@ public class ContaminationMod extends BaseModFoundation<ContaminationMod> {
 			int delta = 0;
 			IContaminationType type = null;
 
-			if(stack.hasCapability(ContaminationMod.CONTAMINATION_INTERACTER_CAPABILITY, null)) {
+			if(stack.hasCapability(Contamination.CONTAMINATION_INTERACTER_CAPABILITY, null)) {
 				IContaminationInteracter interacter = stack
-						.getCapability(ContaminationMod.CONTAMINATION_INTERACTER_CAPABILITY, null);
+						.getCapability(Contamination.CONTAMINATION_INTERACTER_CAPABILITY, null);
 				type = interacter.getType();
 				delta = interacter.getContaminationModifier();
 			}
@@ -150,7 +52,7 @@ public class ContaminationMod extends BaseModFoundation<ContaminationMod> {
 
 			if(delta != 0) {
 				Chunk chunk = event.getWorld().getChunk(event.getPos());
-				IContaminationHolder pollution = chunk.getCapability(ContaminationMod.CONTAMINATION_HOLDER_CAPABILITY,
+				IContaminationHolder pollution = chunk.getCapability(Contamination.CONTAMINATION_HOLDER_CAPABILITY,
 						null);
 				pollution.modify(type, delta);
 				MinecraftForge.EVENT_BUS.post(new ContaminationUpdateEvent(chunk, type, pollution.get(type), delta));
@@ -190,18 +92,22 @@ public class ContaminationMod extends BaseModFoundation<ContaminationMod> {
 					trySpreadPollution(chunk, n4);
 				}
 				// Begin contamination effect handling
-				IContaminationHolder pollution = chunk.getCapability(ContaminationMod.CONTAMINATION_HOLDER_CAPABILITY,
+				IContaminationHolder holder = chunk.getCapability(Contamination.CONTAMINATION_HOLDER_CAPABILITY,
 						null);
 				for(IContaminationType type : ContaminationTypeRegistry.getAllTypes()) {
-					int current = pollution.get(type);
+					if(holder == null || type == null) {
+						//What??
+						return;
+					}
+					int current = holder.get(type);
 					if(current > 0) {
 						for(IContaminationEffect effect : type.getEffectSet(EnumEffectType.WORLDTICK)) {
 							if(effect instanceof IWorldTickEffect && current >= effect.getThreshold()) {
 								((IWorldTickEffect) effect).triggerEffect(chunk);
 								int delta = effect.getReductionOnEffect(world.getDifficulty(), world.rand);
 								if(delta > 0) {
-									pollution.modify(type, delta);
-									MinecraftForge.EVENT_BUS.post(new ContaminationUpdateEvent(chunk, type, pollution.get(type), delta));
+									holder.modify(type, delta);
+									MinecraftForge.EVENT_BUS.post(new ContaminationUpdateEvent(chunk, type, holder.get(type), delta));
 								}
 							}
 						}
@@ -215,9 +121,13 @@ public class ContaminationMod extends BaseModFoundation<ContaminationMod> {
 	private static void trySpreadPollution(Chunk source, Chunk neighbour) {
 		// TODO: The higher the pollution in a chunk the greater the chance to spread
 		if(source.getWorld().rand.nextInt(200) == 0) {
-			IContaminationHolder sourceC = source.getCapability(ContaminationMod.CONTAMINATION_HOLDER_CAPABILITY, null);
-			IContaminationHolder neighbourC = neighbour.getCapability(ContaminationMod.CONTAMINATION_HOLDER_CAPABILITY,
+			IContaminationHolder sourceC = source.getCapability(Contamination.CONTAMINATION_HOLDER_CAPABILITY, null);
+			IContaminationHolder neighbourC = neighbour.getCapability(Contamination.CONTAMINATION_HOLDER_CAPABILITY,
 					null);
+			if(sourceC == null || neighbourC == null) {
+				//What?
+				return;
+			}
 			for(IContaminationType type : ContaminationTypeRegistry.getAllTypes()) {
 				if(sourceC.get(type) > 1 && sourceC.get(type) > neighbourC.get(type)) {
 					sourceC.modify(type, -1);
@@ -232,12 +142,18 @@ public class ContaminationMod extends BaseModFoundation<ContaminationMod> {
 	@SubscribeEvent
 	public static void onEntityUpdate(LivingUpdateEvent event) {
 		Chunk chunk = event.getEntityLiving().getEntityWorld().getChunk(event.getEntityLiving().getPosition());
-		IContaminationHolder holder = chunk.getCapability(ContaminationMod.CONTAMINATION_HOLDER_CAPABILITY, null);
-		if(event.getEntity().hasCapability(CONTAMINATION_INTERACTER_CAPABILITY, null)) {
-			IContaminationInteracter con = event.getEntity().getCapability(CONTAMINATION_INTERACTER_CAPABILITY, null);
+		IContaminationHolder holder = chunk.getCapability(Contamination.CONTAMINATION_HOLDER_CAPABILITY, null);
+		//Modify contamination from contaminating entities
+		if(event.getEntity().hasCapability(Contamination.CONTAMINATION_INTERACTER_CAPABILITY, null)) {
+			IContaminationInteracter con = event.getEntity().getCapability(Contamination.CONTAMINATION_INTERACTER_CAPABILITY, null);
 			holder.modify(con.getType(), con.getContaminationModifierPerTick());
 		}
+		//Trigger contamination effects onto entities
 		for(IContaminationType type : ContaminationTypeRegistry.getAllTypes()) {
+			if(holder == null || type == null) {
+				//What??
+				return;
+			}
 			int current = holder.get(type);
 			for(IContaminationEffect effect : type.getEffectSet(EnumEffectType.ENTITYTICK)) {
 				if(effect instanceof IEntityTickEffect) {
@@ -252,7 +168,7 @@ public class ContaminationMod extends BaseModFoundation<ContaminationMod> {
 	@SubscribeEvent
 	public static void onWorldLoad(WorldEvent.Load event) {
 		if(!event.getWorld().isRemote) {
-			event.getWorld().addEventListener(new WorldEventHandler((WorldServer) event.getWorld()));
+			event.getWorld().addEventListener(new WorldEventListener((WorldServer) event.getWorld()));
 		}
 	}
 }

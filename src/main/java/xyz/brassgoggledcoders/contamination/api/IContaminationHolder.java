@@ -35,8 +35,7 @@ public interface IContaminationHolder {
 		
 		@Override
 		public int get(IContaminationType type) {
-			if(!contaminations.containsKey(type)) {
-				//There is no pollution of that kind (yet >:D)
+			if(type == null /*What are you even doing?!*/ || !contaminations.containsKey(type) /*There is no pollution of that kind (yet >:D)*/) {
 				return 0;
 			}
 			return contaminations.get(type);

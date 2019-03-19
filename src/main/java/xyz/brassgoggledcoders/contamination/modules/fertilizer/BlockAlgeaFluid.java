@@ -12,7 +12,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.Fluid;
-import xyz.brassgoggledcoders.contamination.ContaminationMod;
+import xyz.brassgoggledcoders.contamination.Contamination;
 
 public class BlockAlgeaFluid extends BlockFluidBase {
 
@@ -32,7 +32,7 @@ public class BlockAlgeaFluid extends BlockFluidBase {
 
 	@Override
 	public ResourceLocation getResourceLocation(IBlockState blockState) {
-		return new ResourceLocation(ContaminationMod.MODID, name);
+		return new ResourceLocation(Contamination.MODID, name);
 	}
 
 	@Override

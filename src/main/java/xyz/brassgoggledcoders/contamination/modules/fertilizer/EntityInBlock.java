@@ -10,7 +10,7 @@ import net.minecraft.util.JsonUtils;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.storage.loot.properties.EntityProperty;
-import xyz.brassgoggledcoders.contamination.ContaminationMod;
+import xyz.brassgoggledcoders.contamination.Contamination;
 
 public class EntityInBlock implements EntityProperty
 {
@@ -36,7 +36,7 @@ public class EntityInBlock implements EntityProperty
     {
         protected Serializer()
         {
-            super(new ResourceLocation(ContaminationMod.MODID, "in_block"), EntityInBlock.class);
+            super(new ResourceLocation(Contamination.MODID, "in_block"), EntityInBlock.class);
         }
 
         public JsonElement serialize(EntityInBlock property, JsonSerializationContext serializationContext)
@@ -46,7 +46,7 @@ public class EntityInBlock implements EntityProperty
 
         public EntityInBlock deserialize(JsonElement element, JsonDeserializationContext deserializationContext)
         {
-            return new EntityInBlock(JsonUtils.getBoolean(element, ContaminationMod.MODID + ":in_block"));
+            return new EntityInBlock(JsonUtils.getBoolean(element, Contamination.MODID + ":in_block"));
         }
     }
 }
