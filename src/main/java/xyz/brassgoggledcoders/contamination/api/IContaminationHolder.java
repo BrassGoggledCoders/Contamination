@@ -20,6 +20,10 @@ public interface IContaminationHolder {
 	
 	void set(IContaminationType type, int value, boolean markDirty);
 	
+	default void modify(IContaminationType type, int delta) {
+		set(type, get(type) + delta, true);
+	}
+	
 	NBTBase writeToNBT();
 	void readFromNBT(NBTBase tag);
 
@@ -38,6 +42,9 @@ public interface IContaminationHolder {
 
 		@Override
 		public void set(IContaminationType type, int value, boolean markDirty) {
+			if(value < 0) {
+				//NOPE. Negative pollution is not allowed
+			}
 			contaminations.put(type, value);
 		}
 		
@@ -61,6 +68,8 @@ public interface IContaminationHolder {
 				}
 			}
 		}
+
+		
 	}
 
 	public static class SafeImplementation extends Implementation {
