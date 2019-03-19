@@ -18,10 +18,10 @@ public interface IContaminationHolder {
 
 	int get(IContaminationType type);
 	
-	void set(IContaminationType type, int value, boolean markDirty);
+	void set(IContaminationType type, int value);
 	
 	default void modify(IContaminationType type, int delta) {
-		set(type, get(type) + delta, true);
+		set(type, get(type) + delta);
 	}
 	
 	NBTBase writeToNBT();
@@ -41,7 +41,7 @@ public interface IContaminationHolder {
 		}
 
 		@Override
-		public void set(IContaminationType type, int value, boolean markDirty) {
+		public void set(IContaminationType type, int value) {
 			if(value < 0) {
 				//NOPE. Negative pollution is not allowed
 			}
@@ -89,11 +89,9 @@ public interface IContaminationHolder {
 		}
 
 		@Override
-		public void set(IContaminationType type, int value, boolean markDirty) {
+		public void set(IContaminationType type, int value) {
 			contaminations.put(type, value);
-			if(markDirty) {
-				chunk.markDirty();
-			}
+			chunk.markDirty();
 		}
 	}
 

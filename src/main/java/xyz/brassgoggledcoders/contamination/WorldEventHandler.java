@@ -22,15 +22,14 @@ public class WorldEventHandler implements IWorldEventListener {
 	@Override
 	public void notifyBlockUpdate(World worldIn, BlockPos pos, IBlockState oldState, IBlockState newState, int flags) {
 		if(newState.getBlock() == Blocks.FIRE || newState.getBlock() == Blocks.LAVA) {
-			
 			IContaminationHolder holder = worldIn.getChunk(pos).getCapability(ContaminationMod.CONTAMINATION_HOLDER_CAPABILITY,
 					null);
-			holder.set(ModuleSmoke.smoke, holder.get(ModuleSmoke.smoke) + 1, true);
+			holder.modify(ModuleSmoke.smoke, 1);
 		}
 		else if(newState.getBlock() == Blocks.LIT_FURNACE) {
 			IContaminationHolder holder = worldIn.getChunk(pos).getCapability(ContaminationMod.CONTAMINATION_HOLDER_CAPABILITY,
 					null);
-			holder.set(ModuleSmoke.smoke, holder.get(ModuleSmoke.smoke) + 3, true);
+			holder.modify(ModuleSmoke.smoke, 3);
 		}
 	}
 

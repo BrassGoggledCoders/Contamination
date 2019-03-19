@@ -61,7 +61,7 @@ public class ModuleSmoke extends ModuleBase {
 	public static void onBlockPlaced(BlockEvent.PlaceEvent event) {
 		if(event.getPlacedBlock().getBlock() == Blocks.TORCH) {
 			IContaminationHolder holder = event.getPlayer().getEntityWorld().getChunk(event.getPos()).getCapability(ContaminationMod.CONTAMINATION_HOLDER_CAPABILITY, null);
-			holder.set(smoke, holder.get(smoke) + 1, true);
+			holder.modify(smoke, 1);
 		}
 	}
 }

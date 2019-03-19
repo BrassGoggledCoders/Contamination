@@ -20,7 +20,7 @@ public class EntityFertilizerCreeper extends EntityCreeper {
     {
 		ItemDye.applyBonemeal(new ItemStack(Items.DYE), this.getEntityWorld(), this.getPosition());
 		IContaminationHolder holder = this.getEntityWorld().getChunk(this.getPosition()).getCapability(ContaminationMod.CONTAMINATION_HOLDER_CAPABILITY, null);
-		holder.set(ModuleFertilizer.fertilizer, holder.get(ModuleFertilizer.fertilizer) + 10, true);
+		holder.modify(ModuleFertilizer.fertilizer, 10);
 		super.onDeath(cause);
     }
 

@@ -152,7 +152,7 @@ public class ContaminationMod extends BaseModFoundation<ContaminationMod> {
 				Chunk chunk = event.getWorld().getChunk(event.getPos());
 				IContaminationHolder pollution = chunk.getCapability(ContaminationMod.CONTAMINATION_HOLDER_CAPABILITY,
 						null);
-				pollution.set(type, pollution.get(type) + delta, true);
+				pollution.modify(type, delta);
 				MinecraftForge.EVENT_BUS.post(new ContaminationUpdateEvent(chunk, type, pollution.get(type), delta));
 			}
 		}
@@ -195,10 +195,10 @@ public class ContaminationMod extends BaseModFoundation<ContaminationMod> {
 						for(IContaminationEffect effect : type.getEffectSet(EnumEffectType.WORLDTICK)) {
 							if(effect instanceof IWorldTickEffect && current >= effect.getThreshold()) {
 								((IWorldTickEffect) effect).triggerEffect(chunk);
-								int red = effect.getReductionOnEffect(world.getDifficulty(), world.rand);
-								if(red > 0) {
-									pollution.set(type, red, true);
-									MinecraftForge.EVENT_BUS.post(new ContaminationUpdateEvent(chunk, type, pollution.get(type), red));
+								int delta = effect.getReductionOnEffect(world.getDifficulty(), world.rand);
+								if(delta > 0) {
+									pollution.modify(type, delta);
+									MinecraftForge.EVENT_BUS.post(new ContaminationUpdateEvent(chunk, type, pollution.get(type), delta));
 								}
 							}
 						}
@@ -217,9 +217,9 @@ public class ContaminationMod extends BaseModFoundation<ContaminationMod> {
 					null);
 			for(IContaminationType type : ContaminationTypeRegistry.getAllTypes()) {
 				if(sourceC.get(type) > 1 && sourceC.get(type) > neighbourC.get(type)) {
-					sourceC.set(type, sourceC.get(type) - 1, true);
+					sourceC.modify(type, -1);
 					MinecraftForge.EVENT_BUS.post(new ContaminationUpdateEvent(source, type, sourceC.get(type), 1));
-					neighbourC.set(type, neighbourC.get(type) + 1, true);
+					neighbourC.modify(type, 1);
 					MinecraftForge.EVENT_BUS.post(new ContaminationUpdateEvent(neighbour, type, neighbourC.get(type), 1));
 				}
 			}
