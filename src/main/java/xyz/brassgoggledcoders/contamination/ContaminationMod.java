@@ -235,7 +235,7 @@ public class ContaminationMod extends BaseModFoundation<ContaminationMod> {
 		IContaminationHolder holder = chunk.getCapability(ContaminationMod.CONTAMINATION_HOLDER_CAPABILITY, null);
 		if(event.getEntity().hasCapability(CONTAMINATION_INTERACTER_CAPABILITY, null)) {
 			IContaminationInteracter con = event.getEntity().getCapability(CONTAMINATION_INTERACTER_CAPABILITY, null);
-			holder.modify(con.getType(), con.getContaminationModifier());
+			holder.modify(con.getType(), con.getContaminationModifierPerTick());
 		}
 		for(IContaminationType type : ContaminationTypeRegistry.getAllTypes()) {
 			int current = holder.get(type);

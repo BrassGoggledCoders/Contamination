@@ -12,7 +12,11 @@ import xyz.brassgoggledcoders.contamination.api.types.IContaminationType;
 public interface IContaminationInteracter {
 
 	IContaminationType getType();
+	
 	int getContaminationModifier();
+	
+	//Instead, give the above method context about where it was called from?
+	int getContaminationModifierPerTick();
 	
 	//Nothing to be stored.
 	public static class Storage implements Capability.IStorage<IContaminationInteracter> {
@@ -41,6 +45,11 @@ public interface IContaminationInteracter {
 
 		@Override
 		public int getContaminationModifier() {
+			return value;
+		}
+		
+		@Override
+		public int getContaminationModifierPerTick() {
 			return value;
 		}
 
