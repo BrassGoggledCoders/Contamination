@@ -21,6 +21,9 @@ import net.minecraftforge.fml.common.registry.GameRegistry.ObjectHolder;
 import xyz.brassgoggledcoders.contamination.*;
 import xyz.brassgoggledcoders.contamination.ContaminationMod.ContaminationInteracterProvider;
 import xyz.brassgoggledcoders.contamination.api.*;
+import xyz.brassgoggledcoders.contamination.api.types.ContaminationTypeRegistry;
+import xyz.brassgoggledcoders.contamination.api.types.IContaminationType;
+import xyz.brassgoggledcoders.contamination.effects.EffectPotion;
 
 @Module(value = ContaminationMod.MODID)
 @EventBusSubscriber(modid = ContaminationMod.MODID) //TODO This won't get disabled when the module is disabled

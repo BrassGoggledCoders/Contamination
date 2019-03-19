@@ -1,4 +1,4 @@
-package xyz.brassgoggledcoders.contamination;
+package xyz.brassgoggledcoders.contamination.effects;
 
 import java.util.Random;
 

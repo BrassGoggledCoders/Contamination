@@ -5,9 +5,8 @@ import java.util.Set;
 
 import com.google.common.collect.Sets;
 
-import xyz.brassgoggledcoders.contamination.api.EnumEffectType;
-import xyz.brassgoggledcoders.contamination.api.IContaminationType;
 import xyz.brassgoggledcoders.contamination.api.effect.*;
+import xyz.brassgoggledcoders.contamination.api.types.IContaminationType;
 
 public class ContaminationType implements IContaminationType {
 	public String name;
@@ -47,12 +46,4 @@ public class ContaminationType implements IContaminationType {
 	public Set<IContaminationEffect> getEffectSet(EnumEffectType type) {
 		return effectSets.get(type);
 	}
-	
-//	@Override
-//	public boolean equals(Object o) {
-//		if(o instanceof IContaminationType) {
-//			((IContaminationType) o).getName().equalsIgnoreCase(this.getName());
-//		}
-//		return false;
-//	}
 }

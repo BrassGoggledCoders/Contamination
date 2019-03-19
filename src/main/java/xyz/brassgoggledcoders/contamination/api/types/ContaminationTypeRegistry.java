@@ -1,4 +1,4 @@
-package xyz.brassgoggledcoders.contamination.api;
+package xyz.brassgoggledcoders.contamination.api.types;
 
 import java.util.Collection;
 import java.util.Map;

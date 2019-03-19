@@ -13,6 +13,8 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.common.capabilities.Capability;
+import xyz.brassgoggledcoders.contamination.api.types.ContaminationTypeRegistry;
+import xyz.brassgoggledcoders.contamination.api.types.IContaminationType;
 
 public interface IContaminationHolder {
 

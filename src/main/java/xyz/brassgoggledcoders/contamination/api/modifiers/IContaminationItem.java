@@ -1,4 +1,4 @@
-package xyz.brassgoggledcoders.contamination.api;
+package xyz.brassgoggledcoders.contamination.api.modifiers;
 
 import java.util.concurrent.Callable;
 
@@ -7,12 +7,14 @@ import javax.annotation.Nullable;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.capabilities.Capability;
+import xyz.brassgoggledcoders.contamination.api.types.IContaminationType;
 
 public interface IContaminationItem {
 
 	IContaminationType getType();
 	int getContaminationModifier();
 	
+	//Nothing to be stored.
 	public static class Storage implements Capability.IStorage<IContaminationItem> {
 		@Nullable
 		@Override
@@ -48,6 +50,7 @@ public interface IContaminationItem {
 		}
 	}
 
+	//Not to be used
 	public static class Factory implements Callable<IContaminationItem> {
 		@Override
 		public IContaminationItem call() throws Exception {

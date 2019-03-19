@@ -28,6 +28,9 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import xyz.brassgoggledcoders.contamination.api.*;
 import xyz.brassgoggledcoders.contamination.api.effect.*;
+import xyz.brassgoggledcoders.contamination.api.modifiers.IContaminationItem;
+import xyz.brassgoggledcoders.contamination.api.types.ContaminationTypeRegistry;
+import xyz.brassgoggledcoders.contamination.api.types.IContaminationType;
 import xyz.brassgoggledcoders.contamination.events.ContaminationUpdateEvent;
 
 @Mod(modid = ContaminationMod.MODID, name = ContaminationMod.MODNAME, version = ContaminationMod.MODVERSION)

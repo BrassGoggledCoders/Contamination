@@ -12,6 +12,8 @@ import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
 import xyz.brassgoggledcoders.contamination.ContaminationMod;
 import xyz.brassgoggledcoders.contamination.api.*;
+import xyz.brassgoggledcoders.contamination.api.types.ContaminationTypeRegistry;
+import xyz.brassgoggledcoders.contamination.api.types.IContaminationType;
 
 public class ItemReader extends ItemBase {
 

@@ -1,8 +1,9 @@
-package xyz.brassgoggledcoders.contamination.api;
+package xyz.brassgoggledcoders.contamination.api.types;
 
 import java.util.Set;
 
 import net.minecraft.util.text.translation.I18n;
+import xyz.brassgoggledcoders.contamination.api.effect.EnumEffectType;
 import xyz.brassgoggledcoders.contamination.api.effect.IContaminationEffect;
 
 @SuppressWarnings("deprecation")

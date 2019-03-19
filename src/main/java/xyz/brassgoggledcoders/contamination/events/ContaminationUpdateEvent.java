@@ -2,7 +2,7 @@ package xyz.brassgoggledcoders.contamination.events;
 
 import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.fml.common.eventhandler.Event;
-import xyz.brassgoggledcoders.contamination.api.IContaminationType;
+import xyz.brassgoggledcoders.contamination.api.types.IContaminationType;
 
 //TODO Make Cancellable
 public class ContaminationUpdateEvent extends Event {
