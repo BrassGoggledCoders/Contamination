@@ -9,28 +9,28 @@ import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.capabilities.Capability;
 import xyz.brassgoggledcoders.contamination.api.types.IContaminationType;
 
-public interface IContaminationItem {
+public interface IContaminationInteracter {
 
 	IContaminationType getType();
 	int getContaminationModifier();
 	
 	//Nothing to be stored.
-	public static class Storage implements Capability.IStorage<IContaminationItem> {
+	public static class Storage implements Capability.IStorage<IContaminationInteracter> {
 		@Nullable
 		@Override
-		public NBTBase writeNBT(Capability<IContaminationItem> capability, IContaminationItem instance,
+		public NBTBase writeNBT(Capability<IContaminationInteracter> capability, IContaminationInteracter instance,
 				EnumFacing side) {
 			return null;
 		}
 
 		@Override
-		public void readNBT(Capability<IContaminationItem> capability, IContaminationItem instance, EnumFacing side,
+		public void readNBT(Capability<IContaminationInteracter> capability, IContaminationInteracter instance, EnumFacing side,
 				NBTBase nbt) {
 			
 		}
 	}
 
-	public static class Implementation implements IContaminationItem {
+	public static class Implementation implements IContaminationInteracter {
 		IContaminationType type;
 		int value;
 		
@@ -51,9 +51,9 @@ public interface IContaminationItem {
 	}
 
 	//Not to be used
-	public static class Factory implements Callable<IContaminationItem> {
+	public static class Factory implements Callable<IContaminationInteracter> {
 		@Override
-		public IContaminationItem call() throws Exception {
+		public IContaminationInteracter call() throws Exception {
 			return new Implementation(null, 0);
 		}
 	}

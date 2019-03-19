@@ -8,6 +8,8 @@ import com.teamacronymcoders.base.registrysystem.BlockRegistry;
 import com.teamacronymcoders.base.registrysystem.config.ConfigRegistry;
 
 import net.minecraft.block.Block;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.monster.EntityBlaze;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
@@ -18,9 +20,10 @@ import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry.ObjectHolder;
-import xyz.brassgoggledcoders.contamination.*;
+import xyz.brassgoggledcoders.contamination.ContaminationMod;
 import xyz.brassgoggledcoders.contamination.ContaminationMod.ContaminationInteracterProvider;
-import xyz.brassgoggledcoders.contamination.api.*;
+import xyz.brassgoggledcoders.contamination.ContaminationType;
+import xyz.brassgoggledcoders.contamination.api.IContaminationHolder;
 import xyz.brassgoggledcoders.contamination.api.types.ContaminationTypeRegistry;
 import xyz.brassgoggledcoders.contamination.api.types.IContaminationType;
 import xyz.brassgoggledcoders.contamination.effects.EffectPotion;
@@ -39,6 +42,13 @@ public class ModuleSmoke extends ModuleBase {
     public void preInit(FMLPreInitializationEvent event) {
 		super.preInit(event);
 		ContaminationTypeRegistry.addContaminationType(smoke);
+	}
+	
+	@SubscribeEvent
+	public static void attachEntityCaps(AttachCapabilitiesEvent<Entity> event) {
+		if(event.getObject() instanceof EntityBlaze) {
+			event.addCapability(new ResourceLocation(ContaminationMod.MODID, "contamination_interacter"), new ContaminationInteracterProvider(smoke, 1));
+		}
 	}
 	
 	@SubscribeEvent

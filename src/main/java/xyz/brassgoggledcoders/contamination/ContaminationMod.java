@@ -26,9 +26,9 @@ import net.minecraftforge.fml.common.Mod.*;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
-import xyz.brassgoggledcoders.contamination.api.*;
+import xyz.brassgoggledcoders.contamination.api.IContaminationHolder;
 import xyz.brassgoggledcoders.contamination.api.effect.*;
-import xyz.brassgoggledcoders.contamination.api.modifiers.IContaminationItem;
+import xyz.brassgoggledcoders.contamination.api.modifiers.IContaminationInteracter;
 import xyz.brassgoggledcoders.contamination.api.types.ContaminationTypeRegistry;
 import xyz.brassgoggledcoders.contamination.api.types.IContaminationType;
 import xyz.brassgoggledcoders.contamination.events.ContaminationUpdateEvent;
@@ -36,9 +36,6 @@ import xyz.brassgoggledcoders.contamination.events.ContaminationUpdateEvent;
 @Mod(modid = ContaminationMod.MODID, name = ContaminationMod.MODNAME, version = ContaminationMod.MODVERSION)
 @EventBusSubscriber
 public class ContaminationMod extends BaseModFoundation<ContaminationMod> {
-
-	static int currentTicks;
-	final static int maxTicks = 20;
 
 	public static final String MODID = "contamination";
 	public static final String MODNAME = "Contamination";
@@ -56,8 +53,8 @@ public class ContaminationMod extends BaseModFoundation<ContaminationMod> {
 
 	@CapabilityInject(IContaminationHolder.class)
 	public static Capability<IContaminationHolder> CONTAMINATION_HOLDER_CAPABILITY = null;
-	@CapabilityInject(IContaminationItem.class)
-	public static Capability<IContaminationItem> CONTAMINATION_INTERACTER_CAPABILITY = null;
+	@CapabilityInject(IContaminationInteracter.class)
+	public static Capability<IContaminationInteracter> CONTAMINATION_INTERACTER_CAPABILITY = null;
 
 	@EventHandler
 	@Override
@@ -65,8 +62,8 @@ public class ContaminationMod extends BaseModFoundation<ContaminationMod> {
 		super.preInit(event);
 		CapabilityManager.INSTANCE.register(IContaminationHolder.class, new IContaminationHolder.Storage(),
 				new IContaminationHolder.Factory());
-		CapabilityManager.INSTANCE.register(IContaminationItem.class, new IContaminationItem.Storage(),
-				new IContaminationItem.Factory());
+		CapabilityManager.INSTANCE.register(IContaminationInteracter.class, new IContaminationInteracter.Storage(),
+				new IContaminationInteracter.Factory());
 	}
 
 	@SubscribeEvent
@@ -77,10 +74,10 @@ public class ContaminationMod extends BaseModFoundation<ContaminationMod> {
 	}
 
 	public static class ContaminationInteracterProvider implements ICapabilityProvider {
-		private final IContaminationItem contamination;
+		private final IContaminationInteracter contamination;
 
 		public ContaminationInteracterProvider(IContaminationType type, int value) {
-			contamination = new IContaminationItem.Implementation(type, value);
+			contamination = new IContaminationInteracter.Implementation(type, value);
 		}
 
 		@Override
@@ -142,7 +139,7 @@ public class ContaminationMod extends BaseModFoundation<ContaminationMod> {
 			IContaminationType type = null;
 
 			if(stack.hasCapability(ContaminationMod.CONTAMINATION_INTERACTER_CAPABILITY, null)) {
-				IContaminationItem interacter = stack
+				IContaminationInteracter interacter = stack
 						.getCapability(ContaminationMod.CONTAMINATION_INTERACTER_CAPABILITY, null);
 				type = interacter.getType();
 				delta = interacter.getContaminationModifier();
@@ -160,6 +157,9 @@ public class ContaminationMod extends BaseModFoundation<ContaminationMod> {
 			}
 		}
 	}
+	
+	static int currentTicks;
+	final static int maxTicks = 20;
 
 	@SubscribeEvent
 	public static void onServerTick(TickEvent.ServerTickEvent event) {
@@ -233,6 +233,10 @@ public class ContaminationMod extends BaseModFoundation<ContaminationMod> {
 	public static void onEntityUpdate(LivingUpdateEvent event) {
 		Chunk chunk = event.getEntityLiving().getEntityWorld().getChunk(event.getEntityLiving().getPosition());
 		IContaminationHolder holder = chunk.getCapability(ContaminationMod.CONTAMINATION_HOLDER_CAPABILITY, null);
+		if(event.getEntity().hasCapability(CONTAMINATION_INTERACTER_CAPABILITY, null)) {
+			IContaminationInteracter con = event.getEntity().getCapability(CONTAMINATION_INTERACTER_CAPABILITY, null);
+			holder.modify(con.getType(), con.getContaminationModifier());
+		}
 		for(IContaminationType type : ContaminationTypeRegistry.getAllTypes()) {
 			int current = holder.get(type);
 			for(IContaminationEffect effect : type.getEffectSet(EnumEffectType.ENTITYTICK)) {
