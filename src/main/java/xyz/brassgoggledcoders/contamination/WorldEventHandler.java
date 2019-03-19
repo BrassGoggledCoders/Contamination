@@ -22,17 +22,22 @@ public class WorldEventHandler implements IWorldEventListener {
 
 	@Override
 	public void notifyBlockUpdate(World worldIn, BlockPos pos, IBlockState oldState, IBlockState newState, int flags) {
-		if(newState.getBlock() == Blocks.FIRE) {
+		if(newState.getBlock() == Blocks.FIRE || newState.getBlock() == Blocks.LAVA) {
 			int smoke = ContaminationTypeRegistry.getPosition(ModuleSmoke.smoke);
 			IContaminationHolder holder = worldIn.getChunk(pos).getCapability(ContaminationMod.CONTAMINATION_HOLDER_CAPABILITY,
 					null);
 			holder.set(smoke, holder.get(smoke) + 1, true);
 		}
+		else if(newState.getBlock() == Blocks.LIT_FURNACE) {
+			int smoke = ContaminationTypeRegistry.getPosition(ModuleSmoke.smoke);
+			IContaminationHolder holder = worldIn.getChunk(pos).getCapability(ContaminationMod.CONTAMINATION_HOLDER_CAPABILITY,
+					null);
+			holder.set(smoke, holder.get(smoke) + 3, true);
+		}
 	}
 
 	@Override
 	public void notifyLightSet(BlockPos pos) {
-		// TODO Auto-generated method stub
 		
 	}
 
