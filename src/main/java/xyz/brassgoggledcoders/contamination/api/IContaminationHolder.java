@@ -1,51 +1,65 @@
 package xyz.brassgoggledcoders.contamination.api;
 
-import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.Callable;
 
 import javax.annotation.Nullable;
 
+import com.google.common.collect.Maps;
+
 import net.minecraft.nbt.NBTBase;
-import net.minecraft.nbt.NBTTagIntArray;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.common.capabilities.Capability;
 
 public interface IContaminationHolder {
 
-	int get(int loc);
-
-	int[] getAll();
+	int get(IContaminationType type);
 	
-	void set(int pos, int value, boolean markDirty);
+	void set(IContaminationType type, int value, boolean markDirty);
 	
-	void setAll(int[] values);
+	NBTBase writeToNBT();
+	void readFromNBT(NBTBase tag);
 
 	public static class Implementation implements IContaminationHolder {
-		private int[] values = new int[ContaminationTypeRegistry.getNumberOfTypes()];
 
+		HashMap<IContaminationType, Integer> contaminations = Maps.newHashMap();
+		
 		@Override
-		public int[] getAll() {
-			return values;
-		}
-
-		@Override
-		public void set(int pos, int value, boolean markDirty) {
-			this.values[pos] = value;
-		}
-
-		@Override
-		public int get(int pos) {
-			if(pos >= values.length) {
-				values = Arrays.copyOf(values, ContaminationTypeRegistry.getNumberOfTypes());
+		public int get(IContaminationType type) {
+			if(!contaminations.containsKey(type)) {
+				//There is no pollution of that kind (yet >:D)
+				return 0;
 			}
-			return values[pos];
+			return contaminations.get(type);
 		}
 
+		@Override
+		public void set(IContaminationType type, int value, boolean markDirty) {
+			contaminations.put(type, value);
+		}
+		
+		
+		@Override
+		public NBTBase writeToNBT() {
+			NBTTagCompound tagCompound = new NBTTagCompound();
+			for(Map.Entry<IContaminationType, Integer> entry: contaminations.entrySet()) {
+			    tagCompound.setInteger(entry.getKey().getRegistryName(), entry.getValue());
+			}
+			return tagCompound;
+		}
 
 		@Override
-		public void setAll(int[] values) {
-			this.values = values;
+		public void readFromNBT(NBTBase tag) {
+			contaminations.clear();
+			if(tag instanceof NBTTagCompound) { //If not something has gone wrong!
+				NBTTagCompound comp = (NBTTagCompound) tag;
+				for(String key : comp.getKeySet()) {
+					contaminations.put(ContaminationTypeRegistry.getFromName(key), comp.getInteger(key));
+				}
+			}
 		}
 	}
 
@@ -57,8 +71,17 @@ public interface IContaminationHolder {
 		}
 
 		@Override
-		public void set(int pos, int value, boolean markDirty) {
-			super.set(pos, value, markDirty);
+		public int get(IContaminationType type) {
+			if(!contaminations.containsKey(type)) {
+				contaminations.put(type, 0);
+				return 0;
+			}
+			return contaminations.get(type);
+		}
+
+		@Override
+		public void set(IContaminationType type, int value, boolean markDirty) {
+			contaminations.put(type, value);
 			if(markDirty) {
 				chunk.markDirty();
 			}
@@ -70,18 +93,17 @@ public interface IContaminationHolder {
 		@Override
 		public NBTBase writeNBT(Capability<IContaminationHolder> capability, IContaminationHolder instance,
 				EnumFacing side) {
-			return new NBTTagIntArray(instance.getAll());
+			return instance.writeToNBT();
 		}
 
 		@Override
 		public void readNBT(Capability<IContaminationHolder> capability, IContaminationHolder instance, EnumFacing side,
 				NBTBase nbt) {
-			if(nbt instanceof NBTTagIntArray) {
-				instance.setAll(((NBTTagIntArray) nbt).getIntArray());
-			}
+			instance.readFromNBT(nbt);
 		}
 	}
 
+	//Should not be used
 	public static class Factory implements Callable<IContaminationHolder> {
 		@Override
 		public IContaminationHolder call() throws Exception {

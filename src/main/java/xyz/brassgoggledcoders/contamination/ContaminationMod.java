@@ -149,12 +149,11 @@ public class ContaminationMod extends BaseModFoundation<ContaminationMod> {
 			}
 
 			if(delta != 0) {
-				int typePos = ContaminationTypeRegistry.getPosition(type);
 				Chunk chunk = event.getWorld().getChunk(event.getPos());
 				IContaminationHolder pollution = chunk.getCapability(ContaminationMod.CONTAMINATION_HOLDER_CAPABILITY,
 						null);
-				pollution.set(typePos, pollution.get(typePos) + delta, true);
-				MinecraftForge.EVENT_BUS.post(new ContaminationUpdateEvent(chunk, ContaminationTypeRegistry.getAtPosition(typePos), pollution.get(typePos), delta));
+				pollution.set(type, pollution.get(type) + delta, true);
+				MinecraftForge.EVENT_BUS.post(new ContaminationUpdateEvent(chunk, type, pollution.get(type), delta));
 			}
 		}
 	}
@@ -190,17 +189,16 @@ public class ContaminationMod extends BaseModFoundation<ContaminationMod> {
 				// Begin contamination effect handling
 				IContaminationHolder pollution = chunk.getCapability(ContaminationMod.CONTAMINATION_HOLDER_CAPABILITY,
 						null);
-				for(int pos = 0; pos < ContaminationTypeRegistry.getNumberOfTypes(); pos++) {
-					IContaminationType type = ContaminationTypeRegistry.getAtPosition(pos);
-					int current = pollution.get(pos);
+				for(IContaminationType type : ContaminationTypeRegistry.getAllTypes()) {
+					int current = pollution.get(type);
 					if(current > 0) {
 						for(IContaminationEffect effect : type.getEffectSet()) {
 							if(effect instanceof IWorldTickEffect && current >= effect.getThreshold()) {
 								((IWorldTickEffect) effect).triggerEffect(chunk);
 								int red = effect.getReductionOnEffect(world.getDifficulty(), world.rand);
 								if(red > 0) {
-									pollution.set(pos, red, true);
-									MinecraftForge.EVENT_BUS.post(new ContaminationUpdateEvent(chunk, ContaminationTypeRegistry.getAtPosition(pos), pollution.get(pos), red));
+									pollution.set(type, red, true);
+									MinecraftForge.EVENT_BUS.post(new ContaminationUpdateEvent(chunk, type, pollution.get(type), red));
 								}
 							}
 						}
@@ -217,12 +215,12 @@ public class ContaminationMod extends BaseModFoundation<ContaminationMod> {
 			IContaminationHolder sourceC = source.getCapability(ContaminationMod.CONTAMINATION_HOLDER_CAPABILITY, null);
 			IContaminationHolder neighbourC = neighbour.getCapability(ContaminationMod.CONTAMINATION_HOLDER_CAPABILITY,
 					null);
-			for(int pos = 0; pos < ContaminationTypeRegistry.getNumberOfTypes(); pos++) {
-				if(sourceC.get(pos) > 1 && sourceC.get(pos) > neighbourC.get(pos)) {
-					sourceC.set(pos, sourceC.get(pos) - 1, true);
-					MinecraftForge.EVENT_BUS.post(new ContaminationUpdateEvent(source, ContaminationTypeRegistry.getAtPosition(pos), sourceC.get(pos), 1));
-					neighbourC.set(pos, neighbourC.get(pos) + 1, true);
-					MinecraftForge.EVENT_BUS.post(new ContaminationUpdateEvent(neighbour, ContaminationTypeRegistry.getAtPosition(pos), neighbourC.get(pos), 1));
+			for(IContaminationType type : ContaminationTypeRegistry.getAllTypes()) {
+				if(sourceC.get(type) > 1 && sourceC.get(type) > neighbourC.get(type)) {
+					sourceC.set(type, sourceC.get(type) - 1, true);
+					MinecraftForge.EVENT_BUS.post(new ContaminationUpdateEvent(source, type, sourceC.get(type), 1));
+					neighbourC.set(type, neighbourC.get(type) + 1, true);
+					MinecraftForge.EVENT_BUS.post(new ContaminationUpdateEvent(neighbour, type, neighbourC.get(type), 1));
 				}
 			}
 		}
@@ -231,10 +229,9 @@ public class ContaminationMod extends BaseModFoundation<ContaminationMod> {
 	@SubscribeEvent
 	public static void onEntityUpdate(LivingUpdateEvent event) {
 		Chunk chunk = event.getEntityLiving().getEntityWorld().getChunk(event.getEntityLiving().getPosition());
-		IContaminationHolder pollution = chunk.getCapability(ContaminationMod.CONTAMINATION_HOLDER_CAPABILITY, null);
-		for(int pos = 0; pos < ContaminationTypeRegistry.getNumberOfTypes(); pos++) {
-			IContaminationType type = ContaminationTypeRegistry.getAtPosition(pos);
-			int current = pollution.get(pos);
+		IContaminationHolder holder = chunk.getCapability(ContaminationMod.CONTAMINATION_HOLDER_CAPABILITY, null);
+		for(IContaminationType type : ContaminationTypeRegistry.getAllTypes()) {
+			int current = holder.get(type);
 			for(IContaminationEffect effect : type.getEffectSet()) {
 				if(effect instanceof IEntityTickEffect) {
 					if(current >= effect.getThreshold()) {

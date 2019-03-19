@@ -4,6 +4,7 @@ import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.fml.common.eventhandler.Event;
 import xyz.brassgoggledcoders.contamination.api.IContaminationType;
 
+//TODO Make Cancellable
 public class ContaminationUpdateEvent extends Event {
 	
 	Chunk chunk;

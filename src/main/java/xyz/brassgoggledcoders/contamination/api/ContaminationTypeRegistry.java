@@ -1,37 +1,25 @@
 package xyz.brassgoggledcoders.contamination.api;
 
-import java.util.LinkedList;
+import java.util.Collection;
+import java.util.Map;
 
 import javax.annotation.Nullable;
 
-import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 
 public class ContaminationTypeRegistry {
-	private static LinkedList<IContaminationType> contaminationTypes = Lists.newLinkedList();
+	private static Map<String, IContaminationType> contaminationTypes = Maps.newHashMap();
 	
-	public static int getNumberOfTypes() {
-		return contaminationTypes.size();
-	}
-	
-	public static boolean addContaminationType(IContaminationType type) {
-		return contaminationTypes.add(type);
+	public static void addContaminationType(IContaminationType type) {
+		contaminationTypes.put(type.getRegistryName(), type);
 	}
 	
 	@Nullable
 	public static IContaminationType getFromName(String name) {
-		for(IContaminationType type : contaminationTypes) {
-			if(type.getName().equalsIgnoreCase(name)) {
-				return type;
-			}
-		}
-		return null;
+		return contaminationTypes.get(name);
 	}
-	
-	public static IContaminationType getAtPosition(int pos) {
-		return contaminationTypes.get(pos);
-	}
-	
-	public static int getPosition(IContaminationType type) {
-		return contaminationTypes.indexOf(type);
+
+	public static Collection<IContaminationType> getAllTypes() {
+		return contaminationTypes.values();
 	}
 }

@@ -19,7 +19,7 @@ public class ContaminationType implements IContaminationType {
 	}
 
 	@Override
-	public String getName() {
+	public String getRegistryName() {
 		return name;
 	}
 

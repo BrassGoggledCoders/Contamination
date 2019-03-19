@@ -2,10 +2,15 @@ package xyz.brassgoggledcoders.contamination.api;
 
 import java.util.Set;
 
+import net.minecraft.util.text.translation.I18n;
 import xyz.brassgoggledcoders.contamination.api.effect.IContaminationEffect;
 
 public interface IContaminationType {
-	public String getName();
+	public String getRegistryName();
+	@SuppressWarnings("deprecation")
+	public default String getLocalizedName() {
+		return I18n.translateToLocal("contamination." + getRegistryName());
+	}
 	public int getColor();
 	//TODO Typed sub-sets to reduce loop sizes
 	public Set<IContaminationEffect> getEffectSet();

@@ -8,7 +8,6 @@ import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.*;
-import xyz.brassgoggledcoders.contamination.api.ContaminationTypeRegistry;
 import xyz.brassgoggledcoders.contamination.api.IContaminationHolder;
 import xyz.brassgoggledcoders.contamination.modules.smoke.ModuleSmoke;
 
@@ -23,16 +22,15 @@ public class WorldEventHandler implements IWorldEventListener {
 	@Override
 	public void notifyBlockUpdate(World worldIn, BlockPos pos, IBlockState oldState, IBlockState newState, int flags) {
 		if(newState.getBlock() == Blocks.FIRE || newState.getBlock() == Blocks.LAVA) {
-			int smoke = ContaminationTypeRegistry.getPosition(ModuleSmoke.smoke);
+			
 			IContaminationHolder holder = worldIn.getChunk(pos).getCapability(ContaminationMod.CONTAMINATION_HOLDER_CAPABILITY,
 					null);
-			holder.set(smoke, holder.get(smoke) + 1, true);
+			holder.set(ModuleSmoke.smoke, holder.get(ModuleSmoke.smoke) + 1, true);
 		}
 		else if(newState.getBlock() == Blocks.LIT_FURNACE) {
-			int smoke = ContaminationTypeRegistry.getPosition(ModuleSmoke.smoke);
 			IContaminationHolder holder = worldIn.getChunk(pos).getCapability(ContaminationMod.CONTAMINATION_HOLDER_CAPABILITY,
 					null);
-			holder.set(smoke, holder.get(smoke) + 3, true);
+			holder.set(ModuleSmoke.smoke, holder.get(ModuleSmoke.smoke) + 3, true);
 		}
 	}
 
@@ -63,8 +61,19 @@ public class WorldEventHandler implements IWorldEventListener {
 	@Override
 	public void spawnParticle(int particleID, boolean ignoreRange, double xCoord, double yCoord, double zCoord,
 			double xSpeed, double ySpeed, double zSpeed, int... parameters) {
-		// TODO Auto-generated method stub
-		
+		//TODO This has to be dome with packets because these particles don't get spawned on the server
+//		if(particleID == EnumParticleTypes.SMOKE_LARGE.getParticleID()) {
+//			int smoke = ContaminationTypeRegistry.getPosition(ModuleSmoke.smoke);
+//			IContaminationHolder holder = world.getChunk(new BlockPos(xCoord, yCoord, zCoord)).getCapability(ContaminationMod.CONTAMINATION_HOLDER_CAPABILITY,
+//					null);
+//			holder.set(smoke, holder.get(smoke) + 2, true);
+//		}
+//		else if(particleID == EnumParticleTypes.SMOKE_NORMAL.getParticleID() || particleID == EnumParticleTypes.FLAME.getParticleID()) {
+//			int smoke = ContaminationTypeRegistry.getPosition(ModuleSmoke.smoke);
+//			IContaminationHolder holder = world.getChunk(new BlockPos(xCoord, yCoord, zCoord)).getCapability(ContaminationMod.CONTAMINATION_HOLDER_CAPABILITY,
+//					null);
+//			holder.set(smoke, holder.get(smoke) + 1, true);
+//		}
 	}
 
 	@Override

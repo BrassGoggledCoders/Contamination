@@ -8,14 +8,15 @@ import com.teamacronymcoders.base.registrysystem.config.ConfigRegistry;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import xyz.brassgoggledcoders.contamination.ContaminationMod;
 import xyz.brassgoggledcoders.contamination.api.ContaminationTypeRegistry;
+import xyz.brassgoggledcoders.contamination.api.IContaminationType;
 
 @Module(ContaminationMod.MODID)
 public class ModuleReader extends ModuleBase {
 	@Override
     public void registerItems(ConfigRegistry configRegistry, ItemRegistry itemRegistry) {
-		itemRegistry.register(new ItemReader(-1));
-		for(int pos = 0; pos < ContaminationTypeRegistry.getNumberOfTypes(); pos++) {
-			itemRegistry.register(new ItemReader(pos));
+		itemRegistry.register(new ItemReader("debug"));
+		for(IContaminationType type : ContaminationTypeRegistry.getAllTypes()) {
+			itemRegistry.register(new ItemReader(type.getRegistryName()));
 		}
 	}
 	
@@ -28,7 +29,7 @@ public class ModuleReader extends ModuleBase {
         this.getModuleProxy().ifPresent(proxy -> proxy.preInit(event));
     }
 
-	//Do later, to ensure types are registered first
+	//FIXME: Do later, to ensure types are registered first
     @Override
     public void afterModulesPreInit(FMLPreInitializationEvent event) {
     	this.registerItems(this.getConfigRegistry(), this.getItemRegistry());
