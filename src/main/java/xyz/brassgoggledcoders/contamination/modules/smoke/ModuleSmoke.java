@@ -4,7 +4,10 @@ import java.awt.Color;
 
 import com.teamacronymcoders.base.modulesystem.Module;
 import com.teamacronymcoders.base.modulesystem.ModuleBase;
+import com.teamacronymcoders.base.registrysystem.BlockRegistry;
+import com.teamacronymcoders.base.registrysystem.config.ConfigRegistry;
 
+import net.minecraft.block.Block;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
@@ -12,6 +15,7 @@ import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.registry.GameRegistry.ObjectHolder;
 import xyz.brassgoggledcoders.contamination.*;
 import xyz.brassgoggledcoders.contamination.ContaminationMod.ContaminationInteracterProvider;
 import xyz.brassgoggledcoders.contamination.api.ContaminationTypeRegistry;
@@ -19,9 +23,11 @@ import xyz.brassgoggledcoders.contamination.api.IContaminationType;
 
 @Module(value = ContaminationMod.MODID)
 @EventBusSubscriber(modid = ContaminationMod.MODID) //TODO This won't get disabled when the module is disabled
+@ObjectHolder(ContaminationMod.MODID)
 public class ModuleSmoke extends ModuleBase {
 
 	public static IContaminationType smoke = new ContaminationType("smoke", Color.BLACK.getRed(), new EffectPotion(100, "blindness", false), new KillLeavesEffect(), new KillPlantsEffect());
+	public static final Block smog = null;
 	
 	@Override
     public void preInit(FMLPreInitializationEvent event) {
@@ -36,6 +42,11 @@ public class ModuleSmoke extends ModuleBase {
 		}
 	}
 	
+	@Override
+	public void registerBlocks(ConfigRegistry config, BlockRegistry blocks) {
+		blocks.register(new BlockSmog());
+	}
+
 	@Override
 	public String getName() {
 		return "Smoke";
