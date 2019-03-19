@@ -75,7 +75,7 @@ public class BlockSmog extends BlockBase {
 		int y = random.nextBoolean() ? random.nextInt(2) : -random.nextInt(2);
 		int z = random.nextBoolean() ? random.nextInt(2) : -random.nextInt(2);
 		BlockPos target = pos.add(x, y, z);
-		if(random.nextInt(10) == 0 && (worldIn.isAirBlock(target) || worldIn.getBlockState(target).getBlock().isReplaceable(worldIn, target))) {
+		if(random.nextInt(10) == 0 && worldIn.isAirBlock(target)) {
 			//Source -> Thick/Thin
 			if(level == 0) {
 				if(random.nextBoolean()) {
@@ -90,9 +90,9 @@ public class BlockSmog extends BlockBase {
 				worldIn.setBlockState(target, ModuleSmoke.smog_thin.getDefaultState(), 2);
 			}
 			//Thin may decay
-			else {
-				worldIn.setBlockToAir(pos);
-			}
+//			else {
+//				worldIn.setBlockToAir(pos);
+//			}
 		}
     }
 	
