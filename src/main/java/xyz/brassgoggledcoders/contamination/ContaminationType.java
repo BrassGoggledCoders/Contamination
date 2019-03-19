@@ -1,21 +1,36 @@
 package xyz.brassgoggledcoders.contamination;
 
+import java.util.HashMap;
 import java.util.Set;
 
 import com.google.common.collect.Sets;
 
+import xyz.brassgoggledcoders.contamination.api.EnumEffectType;
 import xyz.brassgoggledcoders.contamination.api.IContaminationType;
-import xyz.brassgoggledcoders.contamination.api.effect.IContaminationEffect;
+import xyz.brassgoggledcoders.contamination.api.effect.*;
 
 public class ContaminationType implements IContaminationType {
 	public String name;
 	public int color;
-	public Set<IContaminationEffect> effectSet;
+	public HashMap<EnumEffectType, Set<IContaminationEffect>> effectSets;
 	
 	public ContaminationType(String name, int color, IContaminationEffect... effectSet) {
 		this.name = name;
 		this.color = color;
-		this.effectSet = Sets.newHashSet(effectSet);
+		Set<IContaminationEffect> other = Sets.newHashSet();
+		Set<IContaminationEffect> entityTick = Sets.newHashSet();
+		Set<IContaminationEffect> worldTick = Sets.newHashSet();
+		for(IContaminationEffect effect : effectSet) {
+			if(effect instanceof IEntityTickEffect) {
+				entityTick.add(effect);
+			}
+			else if(effect instanceof IWorldTickEffect) {
+				worldTick.add(effect);
+			}
+			else {
+				other.add(effect);
+			}
+		}
 	}
 
 	@Override
@@ -29,8 +44,8 @@ public class ContaminationType implements IContaminationType {
 	}
 
 	@Override
-	public Set<IContaminationEffect> getEffectSet() {
-		return effectSet;
+	public Set<IContaminationEffect> getEffectSet(EnumEffectType type) {
+		return effectSets.get(type);
 	}
 	
 //	@Override

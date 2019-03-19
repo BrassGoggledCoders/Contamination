@@ -192,7 +192,7 @@ public class ContaminationMod extends BaseModFoundation<ContaminationMod> {
 				for(IContaminationType type : ContaminationTypeRegistry.getAllTypes()) {
 					int current = pollution.get(type);
 					if(current > 0) {
-						for(IContaminationEffect effect : type.getEffectSet()) {
+						for(IContaminationEffect effect : type.getEffectSet(EnumEffectType.WORLDTICK)) {
 							if(effect instanceof IWorldTickEffect && current >= effect.getThreshold()) {
 								((IWorldTickEffect) effect).triggerEffect(chunk);
 								int red = effect.getReductionOnEffect(world.getDifficulty(), world.rand);
@@ -232,7 +232,7 @@ public class ContaminationMod extends BaseModFoundation<ContaminationMod> {
 		IContaminationHolder holder = chunk.getCapability(ContaminationMod.CONTAMINATION_HOLDER_CAPABILITY, null);
 		for(IContaminationType type : ContaminationTypeRegistry.getAllTypes()) {
 			int current = holder.get(type);
-			for(IContaminationEffect effect : type.getEffectSet()) {
+			for(IContaminationEffect effect : type.getEffectSet(EnumEffectType.ENTITYTICK)) {
 				if(effect instanceof IEntityTickEffect) {
 					if(current >= effect.getThreshold()) {
 						((IEntityTickEffect) effect).triggerEffect(event.getEntityLiving(), current);
