@@ -19,9 +19,20 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class BlockSmog extends BlockBase {
 
-	public BlockSmog() {
-		super(Material.AIR, "smog");
+	int level;
+	
+	public BlockSmog(String name) {
+		super(Material.AIR, "smog_" + name);
 		this.setTickRandomly(true);
+		if(name == "source") {
+			this.level = 0;
+		}
+		else if(name == "thick") {
+			this.level = 1;
+		}
+		else {
+			this.level = 2;
+		}
 	}
 	
 	@Override
@@ -52,19 +63,37 @@ public class BlockSmog extends BlockBase {
 	@Override
 	public void randomTick(World worldIn, BlockPos pos, IBlockState state, Random random)
     {
-		//Try to drift upwards
-		if(worldIn.isAirBlock(pos.up()) || worldIn.getBlockState(pos.up()).getBlock().isReplaceable(worldIn, pos.up())) {
-			worldIn.setBlockState(pos.up(), ModuleSmoke.smog.getDefaultState(), 2);
-			worldIn.setBlockToAir(pos);
+		//Try to drift upwards but stop at about Y=100
+		if(pos.getY() <= 100) {
+			if(worldIn.isAirBlock(pos.up()) || worldIn.getBlockState(pos.up()).getBlock().isReplaceable(worldIn, pos.up())) {
+				worldIn.setBlockState(pos.up(), worldIn.getBlockState(pos), 2);
+				worldIn.setBlockToAir(pos);
+			}
 		}
-		//TODO Implement several levels of smog with varying thicknesses, and the thinnest will not spread
-//		int x = random.nextBoolean() ? random.nextInt(2) : -random.nextInt(2);
-//		int y = random.nextBoolean() ? random.nextInt(2) : -random.nextInt(2);
-//		int z = random.nextBoolean() ? random.nextInt(2) : -random.nextInt(2);
-//		BlockPos target = pos.add(x, y, z);
-//		if(worldIn.isAirBlock(target) || worldIn.getBlockState(target).getBlock().isReplaceable(worldIn, target)) {
-//			worldIn.setBlockState(target, ModuleSmoke.smog.getDefaultState(), 2);
-//		}
+		
+		int x = random.nextBoolean() ? random.nextInt(2) : -random.nextInt(2);
+		int y = random.nextBoolean() ? random.nextInt(2) : -random.nextInt(2);
+		int z = random.nextBoolean() ? random.nextInt(2) : -random.nextInt(2);
+		BlockPos target = pos.add(x, y, z);
+		if(random.nextInt(10) == 0 && (worldIn.isAirBlock(target) || worldIn.getBlockState(target).getBlock().isReplaceable(worldIn, target))) {
+			//Source -> Thick/Thin
+			if(level == 0) {
+				if(random.nextBoolean()) {
+					worldIn.setBlockState(target, ModuleSmoke.smog_thick.getDefaultState(), 2);
+				}
+				else {
+					worldIn.setBlockState(target, ModuleSmoke.smog_thin.getDefaultState(), 2);
+				}
+			}
+			//Thick -> Thin
+			else if(level == 1) {
+				worldIn.setBlockState(target, ModuleSmoke.smog_thin.getDefaultState(), 2);
+			}
+			//Thin may decay
+			else {
+				worldIn.setBlockToAir(pos);
+			}
+		}
     }
 	
 	@Override
@@ -74,4 +103,9 @@ public class BlockSmog extends BlockBase {
         return BlockRenderLayer.TRANSLUCENT;
     }
 	
+	@Override
+	public boolean isAir(IBlockState state, IBlockAccess world, BlockPos pos)
+    {
+        return false;
+    }
 }

@@ -27,7 +27,9 @@ import xyz.brassgoggledcoders.contamination.api.IContaminationType;
 public class ModuleSmoke extends ModuleBase {
 
 	public static IContaminationType smoke = new ContaminationType("smoke", Color.BLACK.getRed(), new EffectPotion(100, "blindness", false), new KillLeavesEffect(), new KillPlantsEffect());
-	public static final Block smog = null;
+	public static final Block smog_source = null;
+	public static final Block smog_thick = null;
+	public static final Block smog_thin = null;
 	
 	@Override
     public void preInit(FMLPreInitializationEvent event) {
@@ -44,7 +46,9 @@ public class ModuleSmoke extends ModuleBase {
 	
 	@Override
 	public void registerBlocks(ConfigRegistry config, BlockRegistry blocks) {
-		blocks.register(new BlockSmog());
+		blocks.register(new BlockSmog("source"));
+		blocks.register(new BlockSmog("thick"));
+		blocks.register(new BlockSmog("thin"));
 	}
 
 	@Override

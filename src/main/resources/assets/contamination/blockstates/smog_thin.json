@@ -2,7 +2,7 @@
   "forge_marker": 1,
   "defaults": {
     "textures": {
-      "all": "contamination:blocks/smog"
+      "all": "contamination:blocks/smog_thin"
     },
     "model": "cube_all",
     "uvlock": true,
