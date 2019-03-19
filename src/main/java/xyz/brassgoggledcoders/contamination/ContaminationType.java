@@ -3,6 +3,7 @@ package xyz.brassgoggledcoders.contamination;
 import java.util.HashMap;
 import java.util.Set;
 
+import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 
 import xyz.brassgoggledcoders.contamination.api.effect.*;
@@ -11,7 +12,7 @@ import xyz.brassgoggledcoders.contamination.api.types.IContaminationType;
 public class ContaminationType implements IContaminationType {
 	public String name;
 	public int color;
-	public HashMap<EnumEffectType, Set<IContaminationEffect>> effectSets;
+	public HashMap<EnumEffectType, Set<IContaminationEffect>> effectSets = Maps.newHashMap();
 	
 	public ContaminationType(String name, int color, IContaminationEffect... effectSet) {
 		this.name = name;
@@ -30,6 +31,9 @@ public class ContaminationType implements IContaminationType {
 				other.add(effect);
 			}
 		}
+		effectSets.put(EnumEffectType.ENTITYTICK, entityTick);
+		effectSets.put(EnumEffectType.WORLDTICK, worldTick);
+		effectSets.put(EnumEffectType.OTHER, other);
 	}
 
 	@Override
