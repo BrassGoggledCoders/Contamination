@@ -8,18 +8,19 @@ import com.teamacronymcoders.base.registrysystem.BlockRegistry;
 import com.teamacronymcoders.base.registrysystem.config.ConfigRegistry;
 
 import net.minecraft.block.Block;
+import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
+import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry.ObjectHolder;
 import xyz.brassgoggledcoders.contamination.*;
 import xyz.brassgoggledcoders.contamination.ContaminationMod.ContaminationInteracterProvider;
-import xyz.brassgoggledcoders.contamination.api.ContaminationTypeRegistry;
-import xyz.brassgoggledcoders.contamination.api.IContaminationType;
+import xyz.brassgoggledcoders.contamination.api.*;
 
 @Module(value = ContaminationMod.MODID)
 @EventBusSubscriber(modid = ContaminationMod.MODID) //TODO This won't get disabled when the module is disabled
@@ -55,5 +56,13 @@ public class ModuleSmoke extends ModuleBase {
 	public String getName() {
 		return "Smoke";
 	}
-
+	
+	@SubscribeEvent
+	public static void onBlockPlaced(BlockEvent.PlaceEvent event) {
+		if(event.getPlacedBlock().getBlock() == Blocks.TORCH) {
+			IContaminationHolder holder = event.getPlayer().getEntityWorld().getChunk(event.getPos()).getCapability(ContaminationMod.CONTAMINATION_HOLDER_CAPABILITY, null);
+			int loc = ContaminationTypeRegistry.getPosition(smoke);
+			holder.set(loc, holder.get(loc) + 1, true);
+		}
+	}
 }

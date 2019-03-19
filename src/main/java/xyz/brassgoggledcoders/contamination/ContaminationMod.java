@@ -53,8 +53,8 @@ public class ContaminationMod extends BaseModFoundation<ContaminationMod> {
 
 	@CapabilityInject(IContaminationHolder.class)
 	public static Capability<IContaminationHolder> CONTAMINATION_HOLDER_CAPABILITY = null;
-	@CapabilityInject(IContaminationInteracter.class)
-	public static Capability<IContaminationInteracter> CONTAMINATION_INTERACTER_CAPABILITY = null;
+	@CapabilityInject(IContaminationItem.class)
+	public static Capability<IContaminationItem> CONTAMINATION_INTERACTER_CAPABILITY = null;
 
 	@EventHandler
 	@Override
@@ -62,8 +62,8 @@ public class ContaminationMod extends BaseModFoundation<ContaminationMod> {
 		super.preInit(event);
 		CapabilityManager.INSTANCE.register(IContaminationHolder.class, new IContaminationHolder.Storage(),
 				new IContaminationHolder.Factory());
-		CapabilityManager.INSTANCE.register(IContaminationInteracter.class, new IContaminationInteracter.Storage(),
-				new IContaminationInteracter.Factory());
+		CapabilityManager.INSTANCE.register(IContaminationItem.class, new IContaminationItem.Storage(),
+				new IContaminationItem.Factory());
 	}
 
 	@SubscribeEvent
@@ -74,10 +74,10 @@ public class ContaminationMod extends BaseModFoundation<ContaminationMod> {
 	}
 
 	public static class ContaminationInteracterProvider implements ICapabilityProvider {
-		private final IContaminationInteracter contamination;
+		private final IContaminationItem contamination;
 
 		public ContaminationInteracterProvider(IContaminationType type, int value) {
-			contamination = new IContaminationInteracter.Implementation(type, value);
+			contamination = new IContaminationItem.Implementation(type, value);
 		}
 
 		@Override
@@ -139,7 +139,7 @@ public class ContaminationMod extends BaseModFoundation<ContaminationMod> {
 			IContaminationType type = null;
 
 			if(stack.hasCapability(ContaminationMod.CONTAMINATION_INTERACTER_CAPABILITY, null)) {
-				IContaminationInteracter interacter = stack
+				IContaminationItem interacter = stack
 						.getCapability(ContaminationMod.CONTAMINATION_INTERACTER_CAPABILITY, null);
 				type = interacter.getType();
 				delta = interacter.getContaminationModifier();

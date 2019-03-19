@@ -8,27 +8,27 @@ import net.minecraft.nbt.NBTBase;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.capabilities.Capability;
 
-public interface IContaminationInteracter {
+public interface IContaminationItem {
 
 	IContaminationType getType();
 	int getContaminationModifier();
 	
-	public static class Storage implements Capability.IStorage<IContaminationInteracter> {
+	public static class Storage implements Capability.IStorage<IContaminationItem> {
 		@Nullable
 		@Override
-		public NBTBase writeNBT(Capability<IContaminationInteracter> capability, IContaminationInteracter instance,
+		public NBTBase writeNBT(Capability<IContaminationItem> capability, IContaminationItem instance,
 				EnumFacing side) {
 			return null;
 		}
 
 		@Override
-		public void readNBT(Capability<IContaminationInteracter> capability, IContaminationInteracter instance, EnumFacing side,
+		public void readNBT(Capability<IContaminationItem> capability, IContaminationItem instance, EnumFacing side,
 				NBTBase nbt) {
 			
 		}
 	}
 
-	public static class Implementation implements IContaminationInteracter {
+	public static class Implementation implements IContaminationItem {
 		IContaminationType type;
 		int value;
 		
@@ -48,9 +48,9 @@ public interface IContaminationInteracter {
 		}
 	}
 
-	public static class Factory implements Callable<IContaminationInteracter> {
+	public static class Factory implements Callable<IContaminationItem> {
 		@Override
-		public IContaminationInteracter call() throws Exception {
+		public IContaminationItem call() throws Exception {
 			return new Implementation(null, 0);
 		}
 	}

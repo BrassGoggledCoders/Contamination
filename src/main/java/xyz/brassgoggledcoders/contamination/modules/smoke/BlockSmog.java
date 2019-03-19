@@ -8,6 +8,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.BlockFaceShape;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.init.Blocks;
 import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -59,23 +60,30 @@ public class BlockSmog extends BlockBase {
         return false;
     }
 
+	@Override
+	public boolean isFullCube(IBlockState state)
+    {
+        return false;
+    }
 	
 	@Override
 	public void randomTick(World worldIn, BlockPos pos, IBlockState state, Random random)
     {
 		//Try to drift upwards but stop at about Y=100
 		if(pos.getY() <= 100) {
-			if(worldIn.isAirBlock(pos.up()) || worldIn.getBlockState(pos.up()).getBlock().isReplaceable(worldIn, pos.up())) {
+			//Intentionally using == Blocks.AIR check to prevent smog replacing itself/logic blocks. 
+			if(worldIn.getBlockState(pos.up()).getBlock() == Blocks.AIR) {
 				worldIn.setBlockState(pos.up(), worldIn.getBlockState(pos), 2);
 				worldIn.setBlockToAir(pos);
 			}
 		}
 		
 		int x = random.nextBoolean() ? random.nextInt(2) : -random.nextInt(2);
-		int y = random.nextBoolean() ? random.nextInt(2) : -random.nextInt(2);
+		int y = -random.nextInt(3);
 		int z = random.nextBoolean() ? random.nextInt(2) : -random.nextInt(2);
 		BlockPos target = pos.add(x, y, z);
-		if(random.nextInt(10) == 0 && worldIn.isAirBlock(target)) {
+		//Intentionally using == Blocks.AIR check to prevent smog replacing itself/logic blocks. 
+		if(random.nextInt(10) == 0 && worldIn.getBlockState(target).getBlock() == Blocks.AIR) {
 			//Source -> Thick/Thin
 			if(level == 0) {
 				if(random.nextBoolean()) {
@@ -103,9 +111,11 @@ public class BlockSmog extends BlockBase {
         return BlockRenderLayer.TRANSLUCENT;
     }
 	
-	@Override
-	public boolean isAir(IBlockState state, IBlockAccess world, BlockPos pos)
+	@SideOnly(Side.CLIENT)
+    public boolean shouldSideBeRendered(IBlockState blockState, IBlockAccess blockAccess, BlockPos pos, EnumFacing side)
     {
-        return false;
+        IBlockState iblockstate = blockAccess.getBlockState(pos.offset(side));
+        Block block = iblockstate.getBlock();
+        return block != this;
     }
 }
