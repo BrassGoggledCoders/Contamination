@@ -14,7 +14,9 @@ import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
+import net.minecraftforge.event.terraingen.SaplingGrowTreeEvent;
 import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
@@ -43,6 +45,8 @@ public class ModuleSmoke extends ModuleBase {
     public void preInit(FMLPreInitializationEvent event) {
 		super.preInit(event);
 		ContaminationTypeRegistry.addContaminationType(smoke);
+		//SaplingGrowTreeEvent is fired on the terrain gen bus
+		MinecraftForge.TERRAIN_GEN_BUS.register(this);
 	}
 	
 	@SubscribeEvent
@@ -78,5 +82,12 @@ public class ModuleSmoke extends ModuleBase {
 			IContaminationHolder holder = event.getPlayer().getEntityWorld().getChunk(event.getPos()).getCapability(Contamination.CONTAMINATION_HOLDER_CAPABILITY, null);
 			holder.modify(smoke, 1);
 		}
+	}
+	
+	@SubscribeEvent
+	public static void onSaplingGrowth(SaplingGrowTreeEvent event) {
+		IContaminationHolder holder = event.getWorld().getChunk(event.getPos()).getCapability(Contamination.CONTAMINATION_HOLDER_CAPABILITY, null);
+		//TODO Base this off tree size?
+		holder.modify(smoke, event.getRand().nextInt(30));
 	}
 }

@@ -44,7 +44,8 @@ public interface IContaminationHolder {
 		@Override
 		public void set(IContaminationType type, int value) {
 			if(value < 0) {
-				//NOPE. Negative pollution is not allowed
+				//Negative pollution is not allowed
+				value = 0;
 			}
 			contaminations.put(type, value);
 		}
