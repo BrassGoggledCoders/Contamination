@@ -68,6 +68,7 @@ public class ModuleSmoke extends ModuleBase {
 		blocks.register(new BlockSmog("source"));
 		blocks.register(new BlockSmog("thick"));
 		blocks.register(new BlockSmog("thin"));
+		blocks.register(new BlockSoot());
 	}
 
 	@Override
