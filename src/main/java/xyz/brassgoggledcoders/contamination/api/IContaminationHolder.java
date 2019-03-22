@@ -26,8 +26,8 @@ public interface IContaminationHolder {
 		set(type, get(type) + delta);
 	}
 	
-	NBTBase writeToNBT();
-	void readFromNBT(NBTBase tag);
+	NBTTagCompound writeToNBT();
+	void readFromNBT(NBTTagCompound tag);
 
 	public static class Implementation implements IContaminationHolder {
 
@@ -52,7 +52,7 @@ public interface IContaminationHolder {
 		
 		
 		@Override
-		public NBTBase writeToNBT() {
+		public NBTTagCompound writeToNBT() {
 			NBTTagCompound tagCompound = new NBTTagCompound();
 			for(Map.Entry<IContaminationType, Integer> entry: contaminations.entrySet()) {
 			    tagCompound.setInteger(entry.getKey().getRegistryName(), entry.getValue());
@@ -61,13 +61,10 @@ public interface IContaminationHolder {
 		}
 
 		@Override
-		public void readFromNBT(NBTBase tag) {
+		public void readFromNBT(NBTTagCompound tag) {
 			contaminations.clear();
-			if(tag instanceof NBTTagCompound) { //If not something has gone wrong!
-				NBTTagCompound comp = (NBTTagCompound) tag;
-				for(String key : comp.getKeySet()) {
-					contaminations.put(ContaminationTypeRegistry.getFromName(key), comp.getInteger(key));
-				}
+			for(String key : tag.getKeySet()) {
+				contaminations.put(ContaminationTypeRegistry.getFromName(key), tag.getInteger(key));
 			}
 		}
 
@@ -108,7 +105,7 @@ public interface IContaminationHolder {
 		@Override
 		public void readNBT(Capability<IContaminationHolder> capability, IContaminationHolder instance, EnumFacing side,
 				NBTBase nbt) {
-			instance.readFromNBT(nbt);
+			instance.readFromNBT((NBTTagCompound) nbt);
 		}
 	}
 

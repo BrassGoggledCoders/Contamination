@@ -25,7 +25,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class BlockSoot extends BlockBase {
 
 	public static final PropertyInteger LAYERS = PropertyInteger.create("layers", 1, 8);
-	// TODO
+	// TODO Fix bad mojang code
 	protected static final AxisAlignedBB[] AABB = new AxisAlignedBB[] {
 			new AxisAlignedBB(0.0D, 0.0D, 0.0D, 1.0D, 0.0D, 1.0D),
 			new AxisAlignedBB(0.0D, 0.0D, 0.0D, 1.0D, 0.125D, 1.0D),

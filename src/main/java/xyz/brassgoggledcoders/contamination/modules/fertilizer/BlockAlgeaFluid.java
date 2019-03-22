@@ -1,7 +1,5 @@
 package xyz.brassgoggledcoders.contamination.modules.fertilizer;
 
-import com.teamacronymcoders.base.blocks.BlockFluidBase;
-
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
@@ -14,7 +12,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.fluids.Fluid;
 import xyz.brassgoggledcoders.contamination.Contamination;
 
-public class BlockAlgeaFluid extends BlockFluidBase {
+public class BlockAlgeaFluid extends BlockFluidBaseFinite {
 
 	String name;
 	DamageSource source;

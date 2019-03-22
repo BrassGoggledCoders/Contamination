@@ -2,6 +2,8 @@ package xyz.brassgoggledcoders.contamination;
 
 import java.util.Iterator;
 
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.WorldServer;
@@ -11,6 +13,7 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
+import net.minecraftforge.event.world.ChunkWatchEvent;
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -22,6 +25,7 @@ import xyz.brassgoggledcoders.contamination.api.modifiers.IContaminationInteract
 import xyz.brassgoggledcoders.contamination.api.types.ContaminationTypeRegistry;
 import xyz.brassgoggledcoders.contamination.api.types.IContaminationType;
 import xyz.brassgoggledcoders.contamination.events.ContaminationUpdateEvent;
+import xyz.brassgoggledcoders.contamination.network.PacketSyncContamination;
 
 @EventBusSubscriber(modid = Contamination.MODID)
 public class EventHandlerCommon {
@@ -171,4 +175,14 @@ public class EventHandlerCommon {
 			event.getWorld().addEventListener(new WorldEventListener((WorldServer) event.getWorld()));
 		}
 	}
+	
+	 @SubscribeEvent
+    public static void onChunkWatch(ChunkWatchEvent event) {
+        EntityPlayer player = event.getPlayer();
+        Chunk chunk = event.getChunkInstance();
+
+        if(player != null && chunk != null) {
+            Contamination.instance.getPacketHandler().sendToPlayer(new PacketSyncContamination(chunk.x, chunk.z, chunk.getCapability(Contamination.CONTAMINATION_HOLDER_CAPABILITY, null).writeToNBT()), (EntityPlayerMP) player);
+        }
+    }
 }

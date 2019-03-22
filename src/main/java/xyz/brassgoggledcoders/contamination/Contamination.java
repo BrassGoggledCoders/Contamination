@@ -14,9 +14,11 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.Mod.Instance;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.relauncher.Side;
 import xyz.brassgoggledcoders.contamination.api.IContaminationHolder;
 import xyz.brassgoggledcoders.contamination.api.modifiers.IContaminationInteracter;
 import xyz.brassgoggledcoders.contamination.api.types.IContaminationType;
+import xyz.brassgoggledcoders.contamination.network.PacketSyncContamination;
 
 @Mod(modid = Contamination.MODID, name = Contamination.MODNAME, version = Contamination.MODVERSION)
 public class Contamination extends BaseModFoundation<Contamination> {
@@ -48,6 +50,9 @@ public class Contamination extends BaseModFoundation<Contamination> {
 				new IContaminationHolder.Factory());
 		CapabilityManager.INSTANCE.register(IContaminationInteracter.class, new IContaminationInteracter.Storage(),
 				new IContaminationInteracter.Factory());
+		
+		Contamination.instance.getPacketHandler().registerPacket(PacketSyncContamination.Handler.class, PacketSyncContamination.class,
+				Side.CLIENT);
 	}
 
 	public static class ContaminationInteracterProvider implements ICapabilityProvider {

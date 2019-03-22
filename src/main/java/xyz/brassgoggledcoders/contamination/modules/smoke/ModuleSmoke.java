@@ -28,15 +28,13 @@ import xyz.brassgoggledcoders.contamination.ContaminationType;
 import xyz.brassgoggledcoders.contamination.api.IContaminationHolder;
 import xyz.brassgoggledcoders.contamination.api.types.ContaminationTypeRegistry;
 import xyz.brassgoggledcoders.contamination.api.types.IContaminationType;
-import xyz.brassgoggledcoders.contamination.effects.EffectOverlay;
-import xyz.brassgoggledcoders.contamination.effects.EffectPotion;
 
 @Module(value = Contamination.MODID)
 @EventBusSubscriber(modid = Contamination.MODID) //TODO This won't get disabled when the module is disabled
 @ObjectHolder(Contamination.MODID)
 public class ModuleSmoke extends ModuleBase {
 
-	public static IContaminationType smoke = new ContaminationType("smoke", Color.BLACK.getRed(), new EffectPotion(500, "blindness", false), new KillLeavesEffect(), new KillPlantsEffect(), new EffectOverlay(100, new ResourceLocation(Contamination.MODID, "textures/gui/overlay/smoke.png")));
+	public static IContaminationType smoke = new ContaminationType("smoke", Color.BLACK.getRed(), new KillLeavesEffect(), new KillPlantsEffect());//,new EffectPotion(500, "blindness", false), new EffectOverlay(100, new ResourceLocation(Contamination.MODID, "textures/gui/overlay/smoke.png")));
 	public static final Block smog_source = null;
 	public static final Block smog_thick = null;
 	public static final Block smog_thin = null;
@@ -79,9 +77,14 @@ public class ModuleSmoke extends ModuleBase {
 	//TODO Make generic
 	@SubscribeEvent
 	public static void onBlockPlaced(BlockEvent.PlaceEvent event) {
-		if(event.getPlacedBlock().getBlock() == Blocks.TORCH) {
-			IContaminationHolder holder = event.getPlayer().getEntityWorld().getChunk(event.getPos()).getCapability(Contamination.CONTAMINATION_HOLDER_CAPABILITY, null);
+		Block block = event.getPlacedBlock().getBlock();
+		IContaminationHolder holder = event.getPlayer().getEntityWorld().getChunk(event.getPos()).getCapability(Contamination.CONTAMINATION_HOLDER_CAPABILITY, null);
+		if(block == Blocks.TORCH) {
 			holder.modify(smoke, 1);
+		}
+		//TODO This won't work, doesn't count as placed
+		else if(block == Blocks.PORTAL) {
+			holder.modify(smoke, 3);
 		}
 	}
 	
@@ -91,4 +94,11 @@ public class ModuleSmoke extends ModuleBase {
 		//TODO Base this off tree size?
 		holder.modify(smoke, event.getRand().nextInt(30));
 	}
+	
+//	@SubscribeEvent
+//	public static void attachChunkCaps(AttachCapabilitiesEvent<Chunk> event) {
+//		if(DimensionType.NETHER.equals(event.getObject().getWorld().provider.getDimensionType())) {
+//			event.getCapabilities().get(new ResourceLocation(Contamination.MODID, "contamination_holder")).getCapability(Contamination.CONTAMINATION_HOLDER_CAPABILITY, null).set(smoke, 100);
+//		}
+//	}
 }

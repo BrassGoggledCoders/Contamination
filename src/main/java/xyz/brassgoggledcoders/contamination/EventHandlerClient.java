@@ -15,7 +15,6 @@ public class EventHandlerClient {
 	@SubscribeEvent
     public static void onRenderGui(RenderGameOverlayEvent.Pre event)
     {
-		//FIXME This will not work yet because contamination level is not synced to the client.
 		IContaminationHolder holder = Minecraft.getMinecraft().world.getChunk(Minecraft.getMinecraft().player.getPosition()).getCapability(Contamination.CONTAMINATION_HOLDER_CAPABILITY, null);
 		for(IContaminationType type : ContaminationTypeRegistry.getAllTypes()) {
 			for(IContaminationEffect effect : type.getEffectSet(EnumEffectType.OVERLAY)) {
