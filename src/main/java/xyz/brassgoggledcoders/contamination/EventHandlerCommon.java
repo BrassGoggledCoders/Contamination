@@ -29,14 +29,14 @@ import xyz.brassgoggledcoders.contamination.network.PacketSyncContamination;
 
 @EventBusSubscriber(modid = Contamination.MODID)
 public class EventHandlerCommon {
-	
+
 	@SubscribeEvent
 	public static void attachChunkCaps(AttachCapabilitiesEvent<Chunk> event) {
 		// TODO Only attach the capability when an interacter is placed in the chunk?
 		event.addCapability(new ResourceLocation(Contamination.MODID, "contamination_holder"),
 				new ContaminationProvider(event.getObject()));
 	}
-	
+
 	@SubscribeEvent
 	public static void onUseItem(PlayerInteractEvent.RightClickBlock event) {
 		if(!event.getWorld().isRemote) {
@@ -63,7 +63,7 @@ public class EventHandlerCommon {
 			}
 		}
 	}
-	
+
 	static int currentTicks;
 	final static int maxTicks = 20;
 
@@ -96,11 +96,10 @@ public class EventHandlerCommon {
 					trySpreadPollution(chunk, n4);
 				}
 				// Begin contamination effect handling
-				IContaminationHolder holder = chunk.getCapability(Contamination.CONTAMINATION_HOLDER_CAPABILITY,
-						null);
+				IContaminationHolder holder = chunk.getCapability(Contamination.CONTAMINATION_HOLDER_CAPABILITY, null);
 				for(IContaminationType type : ContaminationTypeRegistry.getAllTypes()) {
 					if(holder == null || type == null) {
-						//What??
+						// What??
 						return;
 					}
 					int current = holder.get(type);
@@ -111,7 +110,8 @@ public class EventHandlerCommon {
 								int delta = effect.getReductionOnEffect(world.getDifficulty(), world.rand);
 								if(delta > 0) {
 									holder.modify(type, delta);
-									MinecraftForge.EVENT_BUS.post(new ContaminationUpdateEvent(chunk, type, holder.get(type), delta));
+									MinecraftForge.EVENT_BUS
+											.post(new ContaminationUpdateEvent(chunk, type, holder.get(type), delta));
 								}
 							}
 						}
@@ -129,7 +129,7 @@ public class EventHandlerCommon {
 			IContaminationHolder neighbourC = neighbour.getCapability(Contamination.CONTAMINATION_HOLDER_CAPABILITY,
 					null);
 			if(sourceC == null || neighbourC == null) {
-				//What?
+				// What?
 				return;
 			}
 			for(IContaminationType type : ContaminationTypeRegistry.getAllTypes()) {
@@ -137,7 +137,8 @@ public class EventHandlerCommon {
 					sourceC.modify(type, -1);
 					MinecraftForge.EVENT_BUS.post(new ContaminationUpdateEvent(source, type, sourceC.get(type), 1));
 					neighbourC.modify(type, 1);
-					MinecraftForge.EVENT_BUS.post(new ContaminationUpdateEvent(neighbour, type, neighbourC.get(type), 1));
+					MinecraftForge.EVENT_BUS
+							.post(new ContaminationUpdateEvent(neighbour, type, neighbourC.get(type), 1));
 				}
 			}
 		}
@@ -147,15 +148,16 @@ public class EventHandlerCommon {
 	public static void onEntityUpdate(LivingUpdateEvent event) {
 		Chunk chunk = event.getEntityLiving().getEntityWorld().getChunk(event.getEntityLiving().getPosition());
 		IContaminationHolder holder = chunk.getCapability(Contamination.CONTAMINATION_HOLDER_CAPABILITY, null);
-		//Modify contamination from contaminating entities
+		// Modify contamination from contaminating entities
 		if(event.getEntity().hasCapability(Contamination.CONTAMINATION_INTERACTER_CAPABILITY, null)) {
-			IContaminationInteracter con = event.getEntity().getCapability(Contamination.CONTAMINATION_INTERACTER_CAPABILITY, null);
+			IContaminationInteracter con = event.getEntity()
+					.getCapability(Contamination.CONTAMINATION_INTERACTER_CAPABILITY, null);
 			holder.modify(con.getType(), con.getContaminationModifierPerTick());
 		}
-		//Trigger contamination effects onto entities
+		// Trigger contamination effects onto entities
 		for(IContaminationType type : ContaminationTypeRegistry.getAllTypes()) {
 			if(holder == null || type == null) {
-				//What??
+				// What??
 				return;
 			}
 			int current = holder.get(type);
@@ -168,21 +170,24 @@ public class EventHandlerCommon {
 			}
 		}
 	}
-	
+
 	@SubscribeEvent
 	public static void onWorldLoad(WorldEvent.Load event) {
 		if(!event.getWorld().isRemote) {
 			event.getWorld().addEventListener(new WorldEventListener((WorldServer) event.getWorld()));
 		}
 	}
-	
-	 @SubscribeEvent
-    public static void onChunkWatch(ChunkWatchEvent event) {
-        EntityPlayer player = event.getPlayer();
-        Chunk chunk = event.getChunkInstance();
 
-        if(player != null && chunk != null) {
-            Contamination.instance.getPacketHandler().sendToPlayer(new PacketSyncContamination(chunk.x, chunk.z, chunk.getCapability(Contamination.CONTAMINATION_HOLDER_CAPABILITY, null).writeToNBT()), (EntityPlayerMP) player);
-        }
-    }
+	@SubscribeEvent
+	public static void onChunkWatch(ChunkWatchEvent event) {
+		EntityPlayer player = event.getPlayer();
+		Chunk chunk = event.getChunkInstance();
+
+		if(player != null && chunk != null) {
+			Contamination.instance.getPacketHandler().sendToPlayer(
+					new PacketSyncContamination(chunk.x, chunk.z,
+							chunk.getCapability(Contamination.CONTAMINATION_HOLDER_CAPABILITY, null).writeToNBT()),
+					(EntityPlayerMP) player);
+		}
+	}
 }

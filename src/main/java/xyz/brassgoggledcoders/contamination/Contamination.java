@@ -28,7 +28,7 @@ public class Contamination extends BaseModFoundation<Contamination> {
 	public static final String MODVERSION = "@VERSION@";
 	@Instance(MODID)
 	public static Contamination instance;
-	
+
 	static {
 		FluidRegistry.enableUniversalBucket();
 	}
@@ -50,9 +50,9 @@ public class Contamination extends BaseModFoundation<Contamination> {
 				new IContaminationHolder.Factory());
 		CapabilityManager.INSTANCE.register(IContaminationInteracter.class, new IContaminationInteracter.Storage(),
 				new IContaminationInteracter.Factory());
-		
-		Contamination.instance.getPacketHandler().registerPacket(PacketSyncContamination.Handler.class, PacketSyncContamination.class,
-				Side.CLIENT);
+
+		Contamination.instance.getPacketHandler().registerPacket(PacketSyncContamination.Handler.class,
+				PacketSyncContamination.class, Side.CLIENT);
 	}
 
 	public static class ContaminationInteracterProvider implements ICapabilityProvider {

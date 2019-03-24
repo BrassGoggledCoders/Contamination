@@ -22,7 +22,9 @@ import xyz.brassgoggledcoders.contamination.api.IContaminationHolder;
 public class EventHandlerClient {
 	@SubscribeEvent
 	public static void fogColours(EntityViewRenderEvent.FogColors event) {
-		IContaminationHolder holder = Minecraft.getMinecraft().world.getChunk(Minecraft.getMinecraft().player.getPosition()).getCapability(Contamination.CONTAMINATION_HOLDER_CAPABILITY, null);
+		IContaminationHolder holder = Minecraft.getMinecraft().world
+				.getChunk(Minecraft.getMinecraft().player.getPosition())
+				.getCapability(Contamination.CONTAMINATION_HOLDER_CAPABILITY, null);
 		if(holder.get(ModuleSmoke.smoke) > 0) {
 			Color col = new Color(ModuleSmoke.smoke.getColor());
 			event.setRed(col.getRed());
@@ -46,14 +48,16 @@ public class EventHandlerClient {
 								null);
 						int smoke = holder.get(ModuleSmoke.smoke);
 						if(smoke > 0) {
-//							Color smokeCol = new Color(ModuleSmoke.smoke.getColor());
-//							int red =  MathHelper.clamp(smoke / 100, color.getRed(), smokeCol.getRed());
-//							int green = MathHelper.clamp(smoke / 100, color.getGreen(), smokeCol.getGreen());
-//							int blue = MathHelper.clamp(smoke / 100, color.getBlue(), smokeCol.getBlue());
-//							FMLLog.warning("" + red);
-//							FMLLog.warning("" + green);
-//							FMLLog.warning("" + blue);
-							color = new Color(657951);//'Dirty' green
+							// Color smokeCol = new Color(ModuleSmoke.smoke.getColor());
+							// int red = MathHelper.clamp(smoke / 100, color.getRed(), smokeCol.getRed());
+							// int green = MathHelper.clamp(smoke / 100, color.getGreen(),
+							// smokeCol.getGreen());
+							// int blue = MathHelper.clamp(smoke / 100, color.getBlue(),
+							// smokeCol.getBlue());
+							// FMLLog.warning("" + red);
+							// FMLLog.warning("" + green);
+							// FMLLog.warning("" + blue);
+							color = new Color(657951);// 'Dirty' green
 						}
 					}
 					return color.getRGB();

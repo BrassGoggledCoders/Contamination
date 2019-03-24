@@ -17,12 +17,12 @@ public class EffectOverlay implements IOverlayEffect {
 
 	int threshold;
 	ResourceLocation overlayLocation;
-	
+
 	public EffectOverlay(int threshold, ResourceLocation overlayLocation) {
 		this.threshold = threshold;
 		this.overlayLocation = overlayLocation;
 	}
-	
+
 	@Override
 	public int getThreshold() {
 		return threshold;
@@ -30,7 +30,7 @@ public class EffectOverlay implements IOverlayEffect {
 
 	@Override
 	public int getReductionOnEffect(EnumDifficulty enumDifficulty, Random rand) {
-		//Nope. Too easy.
+		// Nope. Too easy.
 		return 0;
 	}
 

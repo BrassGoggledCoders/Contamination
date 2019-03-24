@@ -25,13 +25,13 @@ public class KillPlantsEffect implements IWorldTickEffect {
 		}
 		int x = chunk.x * 16 + world.rand.nextInt(16);
 		int z = chunk.z * 16 + world.rand.nextInt(16);
-        BlockPos randomPos = new BlockPos(x, chunk.getHeight(new BlockPos(x, 0, z)), z);
-        randomPos = randomPos.down();
-        if(world.isAreaLoaded(randomPos, 1) && world.getBlockState(randomPos).getBlock() instanceof IPlantable) {
-        	world.setBlockToAir(randomPos);
-        	chunk.markDirty();
-            Contamination.instance.getLogger().devInfo(randomPos.toString());
-        }
+		BlockPos randomPos = new BlockPos(x, chunk.getHeight(new BlockPos(x, 0, z)), z);
+		randomPos = randomPos.down();
+		if(world.isAreaLoaded(randomPos, 1) && world.getBlockState(randomPos).getBlock() instanceof IPlantable) {
+			world.setBlockToAir(randomPos);
+			chunk.markDirty();
+			Contamination.instance.getLogger().devInfo(randomPos.toString());
+		}
 	}
 
 	@Override

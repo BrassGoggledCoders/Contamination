@@ -12,14 +12,15 @@ import xyz.brassgoggledcoders.contamination.events.ContaminationUpdateEvent;
 
 @ClientPlugin
 public class ContaminationMapPlugin implements IClientPlugin {
-	
+
 	IClientAPI api;
-	
-	public ContaminationMapPlugin() {}
+
+	public ContaminationMapPlugin() {
+	}
 
 	@Override
 	public void initialize(IClientAPI jmClientApi) {
-		this.api = jmClientApi;
+		api = jmClientApi;
 		MinecraftForge.EVENT_BUS.register(this);
 	}
 
@@ -30,13 +31,16 @@ public class ContaminationMapPlugin implements IClientPlugin {
 
 	@Override
 	public void onEvent(ClientEvent event) {
-		
+
 	}
-	
+
 	@SubscribeEvent
 	public void onContaminationChanged(ContaminationUpdateEvent event) {
 		try {
-			api.show(new PolygonOverlay(getModId(), getModId() + ":" + event.getType().toString() + "_" + event.getChunk().toString(), 0, new ShapeProperties().setFillColor(event.getType().getColor()), PolygonHelper.createChunkPolygon(event.getChunk().x, 100/*TODO*/, event.getChunk().z)));
+			api.show(new PolygonOverlay(getModId(),
+					getModId() + ":" + event.getType().toString() + "_" + event.getChunk().toString(), 0,
+					new ShapeProperties().setFillColor(event.getType().getColor()),
+					PolygonHelper.createChunkPolygon(event.getChunk().x, 100/* TODO */, event.getChunk().z)));
 		}
 		catch(Exception e) {
 			// TODO Auto-generated catch block

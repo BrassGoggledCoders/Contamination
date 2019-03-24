@@ -21,70 +21,66 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class BlockSmog extends BlockBase {
 
 	int level;
-	
+
 	public BlockSmog(String name) {
 		super(Material.AIR, "smog_" + name);
-		this.setTickRandomly(true);
+		setTickRandomly(true);
 		if(name == "source") {
-			this.level = 0;
+			level = 0;
 		}
 		else if(name == "thick") {
-			this.level = 1;
+			level = 1;
 		}
 		else {
-			this.level = 2;
+			level = 2;
 		}
 	}
-	
-	@Override
-	public AxisAlignedBB getCollisionBoundingBox(IBlockState blockState, IBlockAccess worldIn, BlockPos pos)
-    {
-        return Block.NULL_AABB;
-    }
-	
-	@Override
-	public boolean causesSuffocation(IBlockState state)
-    {
-        return true;
-    }
-	
-	@Override
-	public BlockFaceShape getBlockFaceShape(IBlockAccess worldIn, IBlockState state, BlockPos pos, EnumFacing face)
-    {
-        return BlockFaceShape.UNDEFINED;
-    }
-	
-	@Override
-    public boolean isOpaqueCube(IBlockState state)
-    {
-        return false;
-    }
 
 	@Override
-	public boolean isFullCube(IBlockState state)
-    {
-        return false;
-    }
-	
+	public AxisAlignedBB getCollisionBoundingBox(IBlockState blockState, IBlockAccess worldIn, BlockPos pos) {
+		return Block.NULL_AABB;
+	}
+
 	@Override
-	public void randomTick(World worldIn, BlockPos pos, IBlockState state, Random random)
-    {
-		//Try to drift upwards but stop at about Y=100
+	public boolean causesSuffocation(IBlockState state) {
+		return true;
+	}
+
+	@Override
+	public BlockFaceShape getBlockFaceShape(IBlockAccess worldIn, IBlockState state, BlockPos pos, EnumFacing face) {
+		return BlockFaceShape.UNDEFINED;
+	}
+
+	@Override
+	public boolean isOpaqueCube(IBlockState state) {
+		return false;
+	}
+
+	@Override
+	public boolean isFullCube(IBlockState state) {
+		return false;
+	}
+
+	@Override
+	public void randomTick(World worldIn, BlockPos pos, IBlockState state, Random random) {
+		// Try to drift upwards but stop at about Y=100
 		if(pos.getY() <= 100) {
-			//Intentionally using == Blocks.AIR check to prevent smog replacing itself/logic blocks. 
+			// Intentionally using == Blocks.AIR check to prevent smog replacing
+			// itself/logic blocks.
 			if(worldIn.getBlockState(pos.up()).getBlock() == Blocks.AIR) {
 				worldIn.setBlockState(pos.up(), worldIn.getBlockState(pos), 2);
 				worldIn.setBlockToAir(pos);
 			}
 		}
-		
+
 		int x = random.nextBoolean() ? random.nextInt(2) : -random.nextInt(2);
 		int y = -random.nextInt(3);
 		int z = random.nextBoolean() ? random.nextInt(2) : -random.nextInt(2);
 		BlockPos target = pos.add(x, y, z);
-		//Intentionally using == Blocks.AIR check to prevent smog replacing itself/logic blocks. 
+		// Intentionally using == Blocks.AIR check to prevent smog replacing
+		// itself/logic blocks.
 		if(random.nextInt(10) == 0 && worldIn.getBlockState(target).getBlock() == Blocks.AIR) {
-			//Source -> Thick/Thin
+			// Source -> Thick/Thin
 			if(level == 0) {
 				if(random.nextBoolean()) {
 					worldIn.setBlockState(target, ModuleSmoke.smog_thick.getDefaultState(), 2);
@@ -93,29 +89,29 @@ public class BlockSmog extends BlockBase {
 					worldIn.setBlockState(target, ModuleSmoke.smog_thin.getDefaultState(), 2);
 				}
 			}
-			//Thick -> Thin
+			// Thick -> Thin
 			else if(level == 1) {
 				worldIn.setBlockState(target, ModuleSmoke.smog_thin.getDefaultState(), 2);
 			}
-			//Thin may decay
-//			else {
-//				worldIn.setBlockToAir(pos);
-//			}
+			// Thin may decay
+			// else {
+			// worldIn.setBlockToAir(pos);
+			// }
 		}
-    }
-	
+	}
+
 	@Override
 	@SideOnly(Side.CLIENT)
-    public BlockRenderLayer getRenderLayer()
-    {
-        return BlockRenderLayer.TRANSLUCENT;
-    }
-	
+	public BlockRenderLayer getRenderLayer() {
+		return BlockRenderLayer.TRANSLUCENT;
+	}
+
+	@Override
 	@SideOnly(Side.CLIENT)
-    public boolean shouldSideBeRendered(IBlockState blockState, IBlockAccess blockAccess, BlockPos pos, EnumFacing side)
-    {
-        IBlockState iblockstate = blockAccess.getBlockState(pos.offset(side));
-        Block block = iblockstate.getBlock();
-        return block != this;
-    }
+	public boolean shouldSideBeRendered(IBlockState blockState, IBlockAccess blockAccess, BlockPos pos,
+			EnumFacing side) {
+		IBlockState iblockstate = blockAccess.getBlockState(pos.offset(side));
+		Block block = iblockstate.getBlock();
+		return block != this;
+	}
 }

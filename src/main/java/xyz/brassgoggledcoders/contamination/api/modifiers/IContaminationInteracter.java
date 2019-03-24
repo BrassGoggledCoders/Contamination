@@ -12,13 +12,13 @@ import xyz.brassgoggledcoders.contamination.api.types.IContaminationType;
 public interface IContaminationInteracter {
 
 	IContaminationType getType();
-	
+
 	int getContaminationModifier();
-	
-	//Instead, give the above method context about where it was called from?
+
+	// Instead, give the above method context about where it was called from?
 	int getContaminationModifierPerTick();
-	
-	//Nothing to be stored.
+
+	// Nothing to be stored.
 	public static class Storage implements Capability.IStorage<IContaminationInteracter> {
 		@Nullable
 		@Override
@@ -28,16 +28,16 @@ public interface IContaminationInteracter {
 		}
 
 		@Override
-		public void readNBT(Capability<IContaminationInteracter> capability, IContaminationInteracter instance, EnumFacing side,
-				NBTBase nbt) {
-			
+		public void readNBT(Capability<IContaminationInteracter> capability, IContaminationInteracter instance,
+				EnumFacing side, NBTBase nbt) {
+
 		}
 	}
 
 	public static class Implementation implements IContaminationInteracter {
 		IContaminationType type;
 		int value;
-		
+
 		public Implementation(IContaminationType type, int value) {
 			this.value = value;
 			this.type = type;
@@ -47,7 +47,7 @@ public interface IContaminationInteracter {
 		public int getContaminationModifier() {
 			return value;
 		}
-		
+
 		@Override
 		public int getContaminationModifierPerTick() {
 			return value;
@@ -59,7 +59,7 @@ public interface IContaminationInteracter {
 		}
 	}
 
-	//Not to be used
+	// Not to be used
 	public static class Factory implements Callable<IContaminationInteracter> {
 		@Override
 		public IContaminationInteracter call() throws Exception {

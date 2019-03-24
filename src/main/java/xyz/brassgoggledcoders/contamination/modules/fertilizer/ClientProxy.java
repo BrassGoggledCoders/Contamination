@@ -13,14 +13,18 @@ import net.minecraftforge.fml.common.event.*;
 import xyz.brassgoggledcoders.contamination.Contamination;
 
 public class ClientProxy implements IModuleProxy {
-	
+
 	@Override
 	public void preInit(FMLPreInitializationEvent event) {
-		RenderingRegistry.registerEntityRenderingHandler(EntityFertilizerCreeper.class, new IRenderFactory<EntityFertilizerCreeper>(){
-            public Render<EntityFertilizerCreeper> createRenderFor(RenderManager manager) {return new RenderFertilizerCreeper(manager);}
-});
+		RenderingRegistry.registerEntityRenderingHandler(EntityFertilizerCreeper.class,
+				new IRenderFactory<EntityFertilizerCreeper>() {
+					@Override
+					public Render<EntityFertilizerCreeper> createRenderFor(RenderManager manager) {
+						return new RenderFertilizerCreeper(manager);
+					}
+				});
 	}
-		
+
 	@Override
 	public void init(FMLInitializationEvent event) {
 		Base.instance.getLibProxy().registerFluidModel(FluidRegistry.getFluid("algea").getBlock(),
@@ -29,6 +33,6 @@ public class ClientProxy implements IModuleProxy {
 
 	@Override
 	public void postInit(FMLPostInitializationEvent event) {
-		
+
 	}
 }

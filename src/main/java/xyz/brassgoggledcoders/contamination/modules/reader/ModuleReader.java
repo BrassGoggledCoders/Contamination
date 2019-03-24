@@ -13,27 +13,27 @@ import xyz.brassgoggledcoders.contamination.api.types.IContaminationType;
 @Module(Contamination.MODID)
 public class ModuleReader extends ModuleBase {
 	@Override
-    public void registerItems(ConfigRegistry configRegistry, ItemRegistry itemRegistry) {
+	public void registerItems(ConfigRegistry configRegistry, ItemRegistry itemRegistry) {
 		itemRegistry.register(new ItemReader("debug"));
 		for(IContaminationType type : ContaminationTypeRegistry.getAllTypes()) {
 			itemRegistry.register(new ItemReader(type.getRegistryName()));
 		}
 	}
-	
-	@Override
-    public void preInit(FMLPreInitializationEvent event) {
-        this.configure(this.getConfigRegistry());
-        this.registerBlocks(this.getConfigRegistry(), this.getBlockRegistry());
-        
-        this.registerEntities(this.getConfigRegistry(), this.getEntityRegistry());
-        this.getModuleProxy().ifPresent(proxy -> proxy.preInit(event));
-    }
 
-	//FIXME: Do later, to ensure types are registered first
-    @Override
-    public void afterModulesPreInit(FMLPreInitializationEvent event) {
-    	this.registerItems(this.getConfigRegistry(), this.getItemRegistry());
-    }
+	@Override
+	public void preInit(FMLPreInitializationEvent event) {
+		configure(getConfigRegistry());
+		registerBlocks(getConfigRegistry(), getBlockRegistry());
+
+		registerEntities(getConfigRegistry(), getEntityRegistry());
+		getModuleProxy().ifPresent(proxy -> proxy.preInit(event));
+	}
+
+	// FIXME: Do later, to ensure types are registered first
+	@Override
+	public void afterModulesPreInit(FMLPreInitializationEvent event) {
+		registerItems(getConfigRegistry(), getItemRegistry());
+	}
 
 	@Override
 	public String getName() {

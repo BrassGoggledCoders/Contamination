@@ -12,41 +12,37 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.storage.loot.properties.EntityProperty;
 import xyz.brassgoggledcoders.contamination.Contamination;
 
-public class EntityInBlock implements EntityProperty
-{
+public class EntityInBlock implements EntityProperty {
 	private final boolean inBlock;
-	
-	public EntityInBlock(boolean inBlock)
-    {
-        this.inBlock = inBlock;
-    }
+
+	public EntityInBlock(boolean inBlock) {
+		this.inBlock = inBlock;
+	}
 
 	@Override
 	public boolean testProperty(Random random, Entity entityIn) {
 		boolean flag = false;
 		BlockPos blockpos = new BlockPos(entityIn);
-        IBlockState iblockstate = entityIn.getEntityWorld().getBlockState(blockpos);
-        if(iblockstate == ModuleFertilizer.algea) {
-        	flag = true;
-        }
+		IBlockState iblockstate = entityIn.getEntityWorld().getBlockState(blockpos);
+		if(iblockstate == ModuleFertilizer.algea) {
+			flag = true;
+		}
 		return flag == inBlock;
 	}
-	
-	public static class Serializer extends EntityProperty.Serializer<EntityInBlock>
-    {
-        protected Serializer()
-        {
-            super(new ResourceLocation(Contamination.MODID, "in_block"), EntityInBlock.class);
-        }
 
-        public JsonElement serialize(EntityInBlock property, JsonSerializationContext serializationContext)
-        {
-            return new JsonPrimitive(property.inBlock);
-        }
+	public static class Serializer extends EntityProperty.Serializer<EntityInBlock> {
+		protected Serializer() {
+			super(new ResourceLocation(Contamination.MODID, "in_block"), EntityInBlock.class);
+		}
 
-        public EntityInBlock deserialize(JsonElement element, JsonDeserializationContext deserializationContext)
-        {
-            return new EntityInBlock(JsonUtils.getBoolean(element, Contamination.MODID + ":in_block"));
-        }
-    }
+		@Override
+		public JsonElement serialize(EntityInBlock property, JsonSerializationContext serializationContext) {
+			return new JsonPrimitive(property.inBlock);
+		}
+
+		@Override
+		public EntityInBlock deserialize(JsonElement element, JsonDeserializationContext deserializationContext) {
+			return new EntityInBlock(JsonUtils.getBoolean(element, Contamination.MODID + ":in_block"));
+		}
+	}
 }

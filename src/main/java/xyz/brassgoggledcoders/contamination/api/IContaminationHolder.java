@@ -19,23 +19,25 @@ import xyz.brassgoggledcoders.contamination.api.types.IContaminationType;
 public interface IContaminationHolder {
 
 	int get(IContaminationType type);
-	
+
 	void set(IContaminationType type, int value);
-	
+
 	default void modify(IContaminationType type, int delta) {
 		set(type, get(type) + delta);
 	}
-	
+
 	NBTTagCompound writeToNBT();
+
 	void readFromNBT(NBTTagCompound tag);
 
 	public static class Implementation implements IContaminationHolder {
 
 		HashMap<IContaminationType, Integer> contaminations = Maps.newHashMap();
-		
+
 		@Override
 		public int get(IContaminationType type) {
-			if(type == null /*What are you even doing?!*/ || !contaminations.containsKey(type) /*There is no pollution of that kind (yet >:D)*/) {
+			if(type == null /* What are you even doing?! */ || !contaminations
+					.containsKey(type) /* There is no pollution of that kind (yet >:D) */) {
 				return 0;
 			}
 			return contaminations.get(type);
@@ -44,18 +46,17 @@ public interface IContaminationHolder {
 		@Override
 		public void set(IContaminationType type, int value) {
 			if(value < 0) {
-				//Negative pollution is not allowed
+				// Negative pollution is not allowed
 				value = 0;
 			}
 			contaminations.put(type, value);
 		}
-		
-		
+
 		@Override
 		public NBTTagCompound writeToNBT() {
 			NBTTagCompound tagCompound = new NBTTagCompound();
-			for(Map.Entry<IContaminationType, Integer> entry: contaminations.entrySet()) {
-			    tagCompound.setInteger(entry.getKey().getRegistryName(), entry.getValue());
+			for(Map.Entry<IContaminationType, Integer> entry : contaminations.entrySet()) {
+				tagCompound.setInteger(entry.getKey().getRegistryName(), entry.getValue());
 			}
 			return tagCompound;
 		}
@@ -68,7 +69,6 @@ public interface IContaminationHolder {
 			}
 		}
 
-		
 	}
 
 	public static class SafeImplementation extends Implementation {
@@ -109,7 +109,7 @@ public interface IContaminationHolder {
 		}
 	}
 
-	//Should not be used
+	// Should not be used
 	public static class Factory implements Callable<IContaminationHolder> {
 		@Override
 		public IContaminationHolder call() throws Exception {

@@ -13,11 +13,11 @@ public class ContaminationType implements IContaminationType {
 	public String name;
 	public int color;
 	public HashMap<EnumEffectType, Set<IContaminationEffect>> effectSets = Maps.newHashMap();
-	
+
 	public ContaminationType(String name, int color, IContaminationEffect... effectSet) {
 		this.name = name;
 		this.color = color;
-		//TODO This needs to be automatic in some way
+		// TODO This needs to be automatic in some way
 		Set<IContaminationEffect> other = Sets.newHashSet();
 		Set<IContaminationEffect> entityTick = Sets.newHashSet();
 		Set<IContaminationEffect> worldTick = Sets.newHashSet();

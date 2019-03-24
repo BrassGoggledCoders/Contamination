@@ -31,69 +31,76 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.registry.EntityEntry;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
 import net.minecraftforge.fml.common.registry.GameRegistry.ObjectHolder;
-import xyz.brassgoggledcoders.contamination.*;
+import xyz.brassgoggledcoders.contamination.Contamination;
 import xyz.brassgoggledcoders.contamination.Contamination.ContaminationInteracterProvider;
+import xyz.brassgoggledcoders.contamination.ContaminationType;
 import xyz.brassgoggledcoders.contamination.api.types.ContaminationTypeRegistry;
 import xyz.brassgoggledcoders.contamination.api.types.IContaminationType;
 import xyz.brassgoggledcoders.contamination.effects.EffectPotion;
 
 @Module(value = Contamination.MODID)
-@EventBusSubscriber(modid = Contamination.MODID) //TODO This won't get disabled when the module is disabled
+@EventBusSubscriber(modid = Contamination.MODID) // TODO This won't get disabled when the module is disabled
 @ObjectHolder(Contamination.MODID)
 public class ModuleFertilizer extends ModuleBase {
-	
+
 	public static final Block algea = null;
-	static IContaminationType fertilizer = new ContaminationType("fertilizer", Color.WHITE.getRGB(), new EffectPotion(70, "poison", true), new DirtDecayEffect(), new OvergrowthEffect());
-	
+	static IContaminationType fertilizer = new ContaminationType("fertilizer", Color.WHITE.getRGB(),
+			new EffectPotion(70, "poison", true), new DirtDecayEffect(), new OvergrowthEffect());
+
 	@Override
-    public void preInit(FMLPreInitializationEvent event) {
+	public void preInit(FMLPreInitializationEvent event) {
 		super.preInit(event);
 		ContaminationTypeRegistry.addContaminationType(fertilizer);
 		LootTableList.register(new ResourceLocation(Contamination.MODID, "algea_fishing"));
 		EntityPropertyManager.registerProperty(new EntityInBlock.Serializer());
 	}
-	
+
 	@Override
 	public void registerBlocks(ConfigRegistry config, BlockRegistry blocks) {
 		Fluid algea = new Fluid("algea", new ResourceLocation(Contamination.MODID, "fluids/algea"),
 				new ResourceLocation(Contamination.MODID, "fluids/algea"));
 		FluidRegistry.registerFluid(algea);
 		FluidRegistry.addBucketForFluid(algea);
-		blocks.register(new BlockAlgeaFluid("algea", FluidRegistry.getFluid("algea"),
-				Material.WATER, DamageSource.DROWN, 2));
+		blocks.register(
+				new BlockAlgeaFluid("algea", FluidRegistry.getFluid("algea"), Material.WATER, DamageSource.DROWN, 2));
 	}
-	
+
 	@SubscribeEvent
 	public static void registerEntities(RegistryEvent.Register<EntityEntry> event) {
 		int networkID = 0;
-		EntityRegistry.registerModEntity(new ResourceLocation(Contamination.MODID, "fertilizer_creeper"), EntityFertilizerCreeper.class,
-				"fertilizer_creeper", networkID++, Contamination.MODID, 64, 1, true);
-		EntityRegistry.addSpawn(EntityFertilizerCreeper.class, 100, 1, 2, EnumCreatureType.MONSTER, BiomeDictionary.getBiomes(BiomeDictionary.Type.WET).toArray(new Biome[0]));
-		EntityRegistry.addSpawn(EntityFertilizerCreeper.class, 100, 1, 2, EnumCreatureType.MONSTER, BiomeDictionary.getBiomes(BiomeDictionary.Type.JUNGLE).toArray(new Biome[0]));
-		EntityRegistry.addSpawn(EntityFertilizerCreeper.class, 150, 1, 2, EnumCreatureType.MONSTER, BiomeDictionary.getBiomes(BiomeDictionary.Type.LUSH).toArray(new Biome[0]));
+		EntityRegistry.registerModEntity(new ResourceLocation(Contamination.MODID, "fertilizer_creeper"),
+				EntityFertilizerCreeper.class, "fertilizer_creeper", networkID++, Contamination.MODID, 64, 1, true);
+		EntityRegistry.addSpawn(EntityFertilizerCreeper.class, 100, 1, 2, EnumCreatureType.MONSTER,
+				BiomeDictionary.getBiomes(BiomeDictionary.Type.WET).toArray(new Biome[0]));
+		EntityRegistry.addSpawn(EntityFertilizerCreeper.class, 100, 1, 2, EnumCreatureType.MONSTER,
+				BiomeDictionary.getBiomes(BiomeDictionary.Type.JUNGLE).toArray(new Biome[0]));
+		EntityRegistry.addSpawn(EntityFertilizerCreeper.class, 150, 1, 2, EnumCreatureType.MONSTER,
+				BiomeDictionary.getBiomes(BiomeDictionary.Type.LUSH).toArray(new Biome[0]));
 	}
-	
+
 	@Override
 	public String getClientProxyPath() {
 		return "xyz.brassgoggledcoders.contamination.modules.fertilizer.ClientProxy";
 	}
-	
+
 	@SubscribeEvent
 	public static void attachItemCaps(AttachCapabilitiesEvent<ItemStack> event) {
-		if(event.getObject().getItem() == Items.DYE && EnumDyeColor.byDyeDamage(event.getObject().getMetadata()) == EnumDyeColor.WHITE) {
-			event.addCapability(new ResourceLocation(Contamination.MODID, "contamination_interacter"), new ContaminationInteracterProvider(fertilizer, 1));
+		if(event.getObject().getItem() == Items.DYE
+				&& EnumDyeColor.byDyeDamage(event.getObject().getMetadata()) == EnumDyeColor.WHITE) {
+			event.addCapability(new ResourceLocation(Contamination.MODID, "contamination_interacter"),
+					new ContaminationInteracterProvider(fertilizer, 1));
 		}
 	}
-	
-	//Slightly hacky, but stops me having to copy paste the whole creeper class or use an AT. TODO: Investigate performance impact
+
+	// Slightly hacky, but stops me having to copy paste the whole creeper class or
+	// use an AT. TODO: Investigate performance impact
 	@SubscribeEvent
 	public static void grief(EntityMobGriefingEvent event) {
 		if(event.getEntity() instanceof EntityFertilizerCreeper) {
 			event.setResult(Result.DENY);
 		}
 	}
-	
-	
+
 	@Override
 	public String getName() {
 		return "Fertilizer Runoff";

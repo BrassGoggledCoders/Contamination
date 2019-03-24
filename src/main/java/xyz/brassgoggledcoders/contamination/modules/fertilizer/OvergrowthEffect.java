@@ -26,14 +26,25 @@ public class OvergrowthEffect implements IWorldTickEffect {
 		}
 		int x = chunk.x * 16 + world.rand.nextInt(16);
 		int z = chunk.z * 16 + world.rand.nextInt(16);
-        BlockPos randomPos = new BlockPos(x, chunk.getHeight(new BlockPos(x, 0, z)), z);
-        randomPos = randomPos.down();
-        if(world.isAreaLoaded(randomPos, 1) && world.getBlockState(randomPos).getBlock() == Blocks.DIRT && (world.isAirBlock(randomPos.up()) || world.getBlockState(randomPos.up()).getBlock() == Blocks.TALLGRASS) && world.isAirBlock(randomPos.up(2))) {
-        	world.setBlockState(randomPos.up(), Blocks.DOUBLE_PLANT.getDefaultState().withProperty(BlockDoublePlant.VARIANT, BlockDoublePlant.EnumPlantType.GRASS).withProperty(BlockDoublePlant.HALF, BlockDoublePlant.EnumBlockHalf.LOWER), 2);
-        	world.setBlockState(randomPos.up(2), Blocks.DOUBLE_PLANT.getDefaultState().withProperty(BlockDoublePlant.VARIANT, BlockDoublePlant.EnumPlantType.GRASS).withProperty(BlockDoublePlant.HALF, BlockDoublePlant.EnumBlockHalf.UPPER), 3);
-        	chunk.markDirty();
-            Contamination.instance.getLogger().devInfo(randomPos.toString());
-        }
+		BlockPos randomPos = new BlockPos(x, chunk.getHeight(new BlockPos(x, 0, z)), z);
+		randomPos = randomPos.down();
+		if(world.isAreaLoaded(randomPos, 1) && world.getBlockState(randomPos).getBlock() == Blocks.DIRT
+				&& (world.isAirBlock(randomPos.up())
+						|| world.getBlockState(randomPos.up()).getBlock() == Blocks.TALLGRASS)
+				&& world.isAirBlock(randomPos.up(2))) {
+			world.setBlockState(randomPos.up(),
+					Blocks.DOUBLE_PLANT.getDefaultState()
+							.withProperty(BlockDoublePlant.VARIANT, BlockDoublePlant.EnumPlantType.GRASS)
+							.withProperty(BlockDoublePlant.HALF, BlockDoublePlant.EnumBlockHalf.LOWER),
+					2);
+			world.setBlockState(randomPos.up(2),
+					Blocks.DOUBLE_PLANT.getDefaultState()
+							.withProperty(BlockDoublePlant.VARIANT, BlockDoublePlant.EnumPlantType.GRASS)
+							.withProperty(BlockDoublePlant.HALF, BlockDoublePlant.EnumBlockHalf.UPPER),
+					3);
+			chunk.markDirty();
+			Contamination.instance.getLogger().devInfo(randomPos.toString());
+		}
 	}
 
 	@Override

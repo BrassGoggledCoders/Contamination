@@ -118,6 +118,7 @@ public class BlockSoot extends BlockBase {
 			// }
 		}
 	}
+
 	/**
 	 * How many world ticks before ticking
 	 */

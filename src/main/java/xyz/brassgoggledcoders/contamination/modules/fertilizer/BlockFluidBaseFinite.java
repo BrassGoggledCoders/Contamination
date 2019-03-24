@@ -18,36 +18,37 @@ import net.minecraftforge.fluids.BlockFluidFinite;
 import net.minecraftforge.fluids.Fluid;
 
 public class BlockFluidBaseFinite extends BlockFluidFinite implements IHasBlockStateMapper, IHasGeneratedModel {
-    private String name;
+	private String name;
 
-    public BlockFluidBaseFinite(String name, Fluid fluid, Material material) {
-        super(fluid, material);
-        this.name = name;
-        this.setTranslationKey(name);
-    }
+	public BlockFluidBaseFinite(String name, Fluid fluid, Material material) {
+		super(fluid, material);
+		this.name = name;
+		setTranslationKey(name);
+	}
 
-    @Override
-    public String getVariant(IBlockState blockState) {
-        return "normal";
-    }
+	@Override
+	public String getVariant(IBlockState blockState) {
+		return "normal";
+	}
 
-    @Override
-    public List<IGeneratedModel> getGeneratedModels() {
-        TemplateFile templateFile = TemplateManager.getTemplateFile("fluid");
-        Map<String, String> replacements = Maps.newHashMap();
-        replacements.put("FLUID", this.fluidName);
-        templateFile.replaceContents(replacements);
+	@Override
+	public List<IGeneratedModel> getGeneratedModels() {
+		TemplateFile templateFile = TemplateManager.getTemplateFile("fluid");
+		Map<String, String> replacements = Maps.newHashMap();
+		replacements.put("FLUID", fluidName);
+		templateFile.replaceContents(replacements);
 
-        return Lists.newArrayList(new GeneratedModel(this.getModelPrefix() + name, ModelType.BLOCKSTATE, templateFile.getFileContents()));
+		return Lists.newArrayList(
+				new GeneratedModel(getModelPrefix() + name, ModelType.BLOCKSTATE, templateFile.getFileContents()));
 
-    }
+	}
 
-    protected String getModelPrefix() {
-        return "";
-    }
+	protected String getModelPrefix() {
+		return "";
+	}
 
-    @Override
-    public Block getBlock() {
-        return this;
-    }
+	@Override
+	public Block getBlock() {
+		return this;
+	}
 }

@@ -13,12 +13,12 @@ public class EffectPotion implements IEntityTickEffect {
 	int threshold;
 	String effectName;
 	boolean isChance;
-	
+
 	public EffectPotion(int threshold, String effectName, boolean isChance) {
 		this.threshold = threshold;
 		this.effectName = effectName;
 	}
-	
+
 	@Override
 	public int getThreshold() {
 		return threshold;
@@ -26,14 +26,15 @@ public class EffectPotion implements IEntityTickEffect {
 
 	@Override
 	public void triggerEffect(EntityLivingBase entityLiving, int contaminationLevel) {
-		//TODO make properly generic
+		// TODO make properly generic
 		if(isChance) {
 			if(entityLiving.getEntityWorld().rand.nextInt(100 + threshold - contaminationLevel) == 0) {
-				entityLiving.addPotionEffect(new PotionEffect(Potion.getPotionFromResourceLocation(effectName),60, 0));
+				entityLiving.addPotionEffect(new PotionEffect(Potion.getPotionFromResourceLocation(effectName), 60, 0));
 			}
 		}
 		else {
-			entityLiving.addPotionEffect(new PotionEffect(Potion.getPotionFromResourceLocation(effectName),60, 0, true, false));
+			entityLiving.addPotionEffect(
+					new PotionEffect(Potion.getPotionFromResourceLocation(effectName), 60, 0, true, false));
 		}
 	}
 

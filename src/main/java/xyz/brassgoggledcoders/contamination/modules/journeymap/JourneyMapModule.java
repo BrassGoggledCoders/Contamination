@@ -11,14 +11,14 @@ import xyz.brassgoggledcoders.contamination.Contamination;
 
 @Module(Contamination.MODID)
 public class JourneyMapModule extends ModuleBase {
-    @Override
-    public String getName() {
-        return "JourneyMap";
-    }
+	@Override
+	public String getName() {
+		return "JourneyMap";
+	}
 
-    @Override
-    public List<IDependency> getDependencies(List<IDependency> dependencies) {
-        dependencies.add(new ModDependency("journeymap"));
-        return super.getDependencies(dependencies);
-    }
+	@Override
+	public List<IDependency> getDependencies(List<IDependency> dependencies) {
+		dependencies.add(new ModDependency("journeymap"));
+		return super.getDependencies(dependencies);
+	}
 }

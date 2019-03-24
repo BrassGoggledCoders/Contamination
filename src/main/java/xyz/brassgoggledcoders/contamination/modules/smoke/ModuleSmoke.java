@@ -31,37 +31,45 @@ import xyz.brassgoggledcoders.contamination.api.types.IContaminationType;
 import xyz.brassgoggledcoders.contamination.effects.EffectOverlay;
 
 @Module(value = Contamination.MODID)
-@EventBusSubscriber(modid = Contamination.MODID) //TODO This won't get disabled when the module is disabled
+@EventBusSubscriber(modid = Contamination.MODID) // TODO This won't get disabled when the module is disabled
 @ObjectHolder(Contamination.MODID)
 public class ModuleSmoke extends ModuleBase {
 
-	public static IContaminationType smoke = new ContaminationType("smoke", Color.BLACK.getRed(), new KillLeavesEffect(), new KillPlantsEffect(), new EffectOverlay(100, new ResourceLocation(Contamination.MODID, "textures/gui/overlay/smoke.png")));//,new EffectPotion(500, "blindness", false), );
+	public static IContaminationType smoke = new ContaminationType("smoke", Color.BLACK.getRed(),
+			new KillLeavesEffect(), new KillPlantsEffect(),
+			new EffectOverlay(100, new ResourceLocation(Contamination.MODID, "textures/gui/overlay/smoke.png")));// ,new
+																													// EffectPotion(500,
+																													// "blindness",
+																													// false),
+																													// );
 	public static final Block smog_source = null;
 	public static final Block smog_thick = null;
 	public static final Block smog_thin = null;
-	
+
 	@Override
-    public void preInit(FMLPreInitializationEvent event) {
+	public void preInit(FMLPreInitializationEvent event) {
 		super.preInit(event);
 		ContaminationTypeRegistry.addContaminationType(smoke);
-		//SaplingGrowTreeEvent is fired on the terrain gen bus
+		// SaplingGrowTreeEvent is fired on the terrain gen bus
 		MinecraftForge.TERRAIN_GEN_BUS.register(this);
 	}
-	
+
 	@SubscribeEvent
 	public static void attachEntityCaps(AttachCapabilitiesEvent<Entity> event) {
 		if(event.getObject() instanceof EntityBlaze) {
-			event.addCapability(new ResourceLocation(Contamination.MODID, "contamination_interacter"), new ContaminationInteracterProvider(smoke, 1));
+			event.addCapability(new ResourceLocation(Contamination.MODID, "contamination_interacter"),
+					new ContaminationInteracterProvider(smoke, 1));
 		}
 	}
-	
+
 	@SubscribeEvent
 	public static void attachItemCaps(AttachCapabilitiesEvent<ItemStack> event) {
 		if(event.getObject().getItem() == Items.FLINT_AND_STEEL) {
-			event.addCapability(new ResourceLocation(Contamination.MODID, "contamination_interacter"), new ContaminationInteracterProvider(smoke, 1));
+			event.addCapability(new ResourceLocation(Contamination.MODID, "contamination_interacter"),
+					new ContaminationInteracterProvider(smoke, 1));
 		}
 	}
-	
+
 	@Override
 	public void registerBlocks(ConfigRegistry config, BlockRegistry blocks) {
 		blocks.register(new BlockSmog("source"));
@@ -74,32 +82,37 @@ public class ModuleSmoke extends ModuleBase {
 	public String getName() {
 		return "Smoke";
 	}
-	
-	//TODO Make generic
+
+	// TODO Make generic
 	@SubscribeEvent
 	public static void onBlockPlaced(BlockEvent.PlaceEvent event) {
 		Block block = event.getPlacedBlock().getBlock();
-		IContaminationHolder holder = event.getPlayer().getEntityWorld().getChunk(event.getPos()).getCapability(Contamination.CONTAMINATION_HOLDER_CAPABILITY, null);
+		IContaminationHolder holder = event.getPlayer().getEntityWorld().getChunk(event.getPos())
+				.getCapability(Contamination.CONTAMINATION_HOLDER_CAPABILITY, null);
 		if(block == Blocks.TORCH) {
 			holder.modify(smoke, 1);
 		}
-		//TODO This won't work, doesn't count as placed
+		// TODO This won't work, doesn't count as placed
 		else if(block == Blocks.PORTAL) {
 			holder.modify(smoke, 3);
 		}
 	}
-	
+
 	@SubscribeEvent
 	public static void onSaplingGrowth(SaplingGrowTreeEvent event) {
-		IContaminationHolder holder = event.getWorld().getChunk(event.getPos()).getCapability(Contamination.CONTAMINATION_HOLDER_CAPABILITY, null);
-		//TODO Base this off tree size?
+		IContaminationHolder holder = event.getWorld().getChunk(event.getPos())
+				.getCapability(Contamination.CONTAMINATION_HOLDER_CAPABILITY, null);
+		// TODO Base this off tree size?
 		holder.modify(smoke, event.getRand().nextInt(30));
 	}
-	
-//	@SubscribeEvent
-//	public static void attachChunkCaps(AttachCapabilitiesEvent<Chunk> event) {
-//		if(DimensionType.NETHER.equals(event.getObject().getWorld().provider.getDimensionType())) {
-//			event.getCapabilities().get(new ResourceLocation(Contamination.MODID, "contamination_holder")).getCapability(Contamination.CONTAMINATION_HOLDER_CAPABILITY, null).set(smoke, 100);
-//		}
-//	}
+
+	// @SubscribeEvent
+	// public static void attachChunkCaps(AttachCapabilitiesEvent<Chunk> event) {
+	// if(DimensionType.NETHER.equals(event.getObject().getWorld().provider.getDimensionType()))
+	// {
+	// event.getCapabilities().get(new ResourceLocation(Contamination.MODID,
+	// "contamination_holder")).getCapability(Contamination.CONTAMINATION_HOLDER_CAPABILITY,
+	// null).set(smoke, 100);
+	// }
+	// }
 }

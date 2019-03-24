@@ -18,14 +18,14 @@ public class BlockAlgeaFluid extends BlockFluidBaseFinite {
 	DamageSource source;
 	int damage;
 
-	//TODO When this displaces water, have it take that water's level
+	// TODO When this displaces water, have it take that water's level
 	public BlockAlgeaFluid(String name, Fluid fluid, Material material, DamageSource source, int damage) {
 		super(name, fluid, material);
 		this.name = name;
 		this.source = source;
 		this.damage = damage;
-		this.displacements.put(Blocks.WATER, true);
-		this.displacements.put(Blocks.FLOWING_WATER, true);
+		displacements.put(Blocks.WATER, true);
+		displacements.put(Blocks.FLOWING_WATER, true);
 	}
 
 	@Override

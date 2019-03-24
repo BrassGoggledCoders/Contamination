@@ -6,7 +6,7 @@ import xyz.brassgoggledcoders.contamination.api.types.IContaminationType;
 
 //TODO Make Cancellable
 public class ContaminationUpdateEvent extends Event {
-	
+
 	Chunk chunk;
 	IContaminationType type;
 	int contamination, delta;
@@ -21,9 +21,9 @@ public class ContaminationUpdateEvent extends Event {
 	public Chunk getChunk() {
 		return chunk;
 	}
-	
+
 	public IContaminationType getType() {
 		return type;
 	}
-	
+
 }
