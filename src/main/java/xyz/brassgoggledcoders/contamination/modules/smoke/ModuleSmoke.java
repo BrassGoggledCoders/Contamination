@@ -28,13 +28,14 @@ import xyz.brassgoggledcoders.contamination.ContaminationType;
 import xyz.brassgoggledcoders.contamination.api.IContaminationHolder;
 import xyz.brassgoggledcoders.contamination.api.types.ContaminationTypeRegistry;
 import xyz.brassgoggledcoders.contamination.api.types.IContaminationType;
+import xyz.brassgoggledcoders.contamination.effects.EffectOverlay;
 
 @Module(value = Contamination.MODID)
 @EventBusSubscriber(modid = Contamination.MODID) //TODO This won't get disabled when the module is disabled
 @ObjectHolder(Contamination.MODID)
 public class ModuleSmoke extends ModuleBase {
 
-	public static IContaminationType smoke = new ContaminationType("smoke", Color.BLACK.getRed(), new KillLeavesEffect(), new KillPlantsEffect());//,new EffectPotion(500, "blindness", false), new EffectOverlay(100, new ResourceLocation(Contamination.MODID, "textures/gui/overlay/smoke.png")));
+	public static IContaminationType smoke = new ContaminationType("smoke", Color.BLACK.getRed(), new KillLeavesEffect(), new KillPlantsEffect(), new EffectOverlay(100, new ResourceLocation(Contamination.MODID, "textures/gui/overlay/smoke.png")));//,new EffectPotion(500, "blindness", false), );
 	public static final Block smog_source = null;
 	public static final Block smog_thick = null;
 	public static final Block smog_thin = null;

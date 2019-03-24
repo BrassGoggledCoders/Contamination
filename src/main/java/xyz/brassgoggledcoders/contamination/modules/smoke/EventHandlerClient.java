@@ -14,13 +14,11 @@ import net.minecraft.world.biome.BiomeColorHelper;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.client.event.ColorHandlerEvent;
 import net.minecraftforge.client.event.EntityViewRenderEvent;
-import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.relauncher.Side;
 import xyz.brassgoggledcoders.contamination.Contamination;
 import xyz.brassgoggledcoders.contamination.api.IContaminationHolder;
 
-@EventBusSubscriber(value = Side.CLIENT, modid = Contamination.MODID)
+//@EventBusSubscriber(value = Side.CLIENT, modid = Contamination.MODID)
 public class EventHandlerClient {
 	@SubscribeEvent
 	public static void fogColours(EntityViewRenderEvent.FogColors event) {
